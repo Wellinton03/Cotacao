@@ -1,20 +1,41 @@
 package controller;
 
-import entity.CotacoesEntity;
+import java.io.Serializable;
+import java.util.List;
 
-public class CotacoesController {
+import javax.persistence.EntityManager;
 
-	private CotacoesEntity cotacoesEntity;
+
+public class CotacoesController implements Serializable {
+
 	
-	public CotacoesController() {
-		this.cotacoesEntity = new CotacoesEntity();
+	private static final long serialVersionUID = 1L;
+	
+		private EntityManager manager;
+		
+		
+		public CotacoesController() {
+			
+		}
+		
+		public CotacoesController(EntityManager manager) {
+			this.manager = manager;
+		}
+		
+		public CotacoesController porId(Long Id) {
+			return null;
+		}
+		
+		public List<CotacoesController> pesquisar(String desciption) {
+			return null;
+		}
+		
+		public CotacoesController adicionar( CotacoesController cotacoesController) {
+			return null;
+		}
+		
+		public void excluir(CotacoesController cotacoesController) {
+			
+		}
 	}
-	
-	
-	public void saveCotacao(Long id, String description) {
-		this.cotacoesEntity = new CotacoesEntity(id, description);
-		
-		
-		
-	}
-}
+
