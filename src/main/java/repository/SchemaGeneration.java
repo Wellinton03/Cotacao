@@ -6,22 +6,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import controller.CotacoesController;
+import controller.IndicadoresController;
+import entity.Indicadores;
 
 public class SchemaGeneration {
 
 	public static void main(String[] args) {
 		
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Cotacoes_database");
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("cotacoesDatabase");
 		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityManager manager = entityManagerFactory.createEntityManager();
 		
-		List<CotacoesController> lista = entityManager.createQuery("from Empresa" , CotacoesController.class )
+		List<Indicadores> lista = manager.createQuery("from Indicadores" , Indicadores.class )
 				.getResultList();
 		
 		System.out.println(lista);
 		
-		entityManager.close();
+		manager.close();
 		entityManagerFactory.close();
 	}
 
