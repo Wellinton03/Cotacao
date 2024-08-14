@@ -6,8 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import controller.IndicadoresController;
 import entity.Indicadores;
+import service.IndicadoresService;
 
 public class CamadaPersistencia {
 
@@ -20,7 +20,7 @@ public class CamadaPersistencia {
 		manager.getTransaction().begin();
 		
 		
-		IndicadoresController indicadoresController = new IndicadoresController(manager);
+		IndicadoresService indicadoresService = new IndicadoresService(manager);
 		Indicadores indicadores = new Indicadores();
 		
 		
@@ -31,10 +31,10 @@ public class CamadaPersistencia {
 		
 		
 		//Salvar 
-		indicadoresController.salvar(indicadores);
+		indicadoresService.salvar(indicadores);
 		
 		//Buscar
-		List<Indicadores> listaIndicadores = indicadoresController.pesquisar("");
+		List<Indicadores> listaIndicadores = indicadoresService.pesquisar("");
 		System.out.println(listaIndicadores);
 
 		System.out.println("listando");
