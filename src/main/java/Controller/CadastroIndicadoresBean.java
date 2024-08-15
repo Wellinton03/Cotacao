@@ -1,19 +1,31 @@
 package Controller;
 
-import javax.enterprise.context.RequestScoped;
+import java.io.Serializable;
+import java.util.List;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import entity.Indicadores;
+import service.IndicadoresService;
+
 @Named
-@RequestScoped
-public class CadastroIndicadoresBean {
+@ViewScoped
+public class CadastroIndicadoresBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
-	private static Integer NUMERO = 0;
-	
-	public CadastroIndicadoresBean() {
-		NUMERO++;
+	@Inject
+	private IndicadoresService indicadoresService;
+	private List<Indicadores> listaIndicadores;
+	 
+	public void todosIndicadores() {
+		listaIndicadores = indicadoresService.todosIndicadores();
+	}
+	public List<Indicadores> getListaIndicadores() {
+		return listaIndicadores;
+	}
 	}
 	
-	public Integer getNumero() {
-		return NUMERO;
-	}
-}
+	

@@ -25,40 +25,15 @@ public class Indicadores implements Serializable {
 	@Column(name = "description", nullable = false)
 	private String description;
 	
-	@Column(name = "Data_e_Hora")
-	private LocalDateTime dataEHora;
 	
-	
-	@Column(name = "valor")
-	private Integer valor;
 	
 	
 	public String toString() {
 		return "Indicadores {\n" +
 	            "  id=" + id + "\n" +
-	            "  description='" + description + '\'' + "\n" +
-	            "  valor=" + valor + "\n" +
-	            "  dataEHora=" + dataEHora + "\n" +
-	            '}' + "\n";
+	            "  description='" + description + '\'' + "\n";
 	}
-	public LocalDateTime getDataEHora() {
-		return dataEHora;
-	}
-
-
-	public void setDataEHora(LocalDateTime dataEHora) {
-		this.dataEHora = dataEHora;
-	}
-
-
-	public Integer getValor() {
-		return valor;
-	}
-
-
-	public void setValor(Integer valor) {
-		this.valor = valor;
-	}
+	
 
 	
 	public Long getId() {

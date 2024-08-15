@@ -8,6 +8,9 @@
 	<meta charset="UTF-8" />
 	<title>Cadastro De Indicadores</title>
 
+	<f:metadata>
+		<f:viewAction action="#{cadastroIndicadoresBean.todosIndicadores()}" />
+	</f:metadata>
 	<h:outputStylesheet library="ListaDeIndicadores" name="estilo.css" />
 </h:head>
 
@@ -18,7 +21,6 @@
 	</header>
 	<div id="conteudo">
 		<h:form>
-
 			<p:megaMenu orientation="horizontal" autoDisplay="false">
 				<f:facet name="start">
 					<p:graphicImage name="images/primefaces-logo.svg"
@@ -27,7 +29,8 @@
 				<p:submenu label="Tabelas" icon="gráfico-pi-linha">
 					<p:column>
 						<p:submenu label="Indicadores">
-							<p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores" />
+							<p:menuitem value="Lista de Indicadores"
+								outcome="/ListaDeIndicadores" />
 						</p:submenu>
 						<p:submenu label="Cotações">
 							<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
@@ -87,6 +90,17 @@
 					</p:column>
 				</p:submenu>
 			</p:megaMenu>
+			<p:dataTable 
+				value="#{cadastroIndicadoresBean.listaIndicadores}"
+				id="idIndicadores" var="indicadores" 
+				paginator="true" rows="5" paginatorPosition="bottom">
+				<p:column headerText="id">
+					<h:outputText value="${indicadores.id}" />
+				</p:column>
+				<p:column headerText="Descrição" sortBy="#{indicadores.description}">
+					<h:outputText value="#{indicadores.description}" />
+				</p:column>
+			</p:dataTable>
 		</h:form>
 	</div>
 

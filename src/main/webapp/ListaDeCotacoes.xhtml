@@ -27,7 +27,8 @@
 				<p:submenu label="Tabelas" icon="gráfico-pi-linha">
 					<p:column>
 						<p:submenu label="Indicadores">
-							<p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores" />
+							<p:menuitem value="Lista de Indicadores"
+								outcome="/ListaDeIndicadores" />
 						</p:submenu>
 						<p:submenu label="Cotações">
 							<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
@@ -87,6 +88,21 @@
 					</p:column>
 				</p:submenu>
 			</p:megaMenu>
+			
+			<p:dataTable value="#{[0]}" id="idCotacoes" var="cotacoes">
+				<p:column headerText="id">
+					<h:outputText value="1" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<h:outputText value="BitCoin" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="$10,30" />
+				</p:column>
+				<p:column headerText="Data da cotação">
+					<h:outputText value="15/10/2023" />
+				</p:column>
+			</p:dataTable>
 		</h:form>
 	</div>
 
