@@ -26,6 +26,9 @@ public class Indicadores implements Serializable {
 	private String description;
 	
 	
+	public Indicadores() {
+		
+	}
 	
 	
 	public String toString() {
@@ -52,9 +55,6 @@ public class Indicadores implements Serializable {
 		this.description = description;
 	}
 	
-	public Indicadores() {
-		
-	}
 	
 	public Indicadores( Long id, String description) {
 		this.id = id;

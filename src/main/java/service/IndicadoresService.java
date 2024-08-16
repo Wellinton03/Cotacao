@@ -22,10 +22,6 @@ public class IndicadoresService implements Serializable {
 	public IndicadoresService() {
 	}
 
-	public IndicadoresService(EntityManager manager) {
-		this.manager = manager;
-	}
-
 	public Indicadores porId(Long Id) {
 		return manager.find(Indicadores.class, Id);
 	}
@@ -37,7 +33,7 @@ public class IndicadoresService implements Serializable {
 
 		return query.getResultList();
 	}
-	
+
 	public List<Indicadores> todosIndicadores() {
 		return manager.createQuery("from Indicadores", Indicadores.class).getResultList();
 	}

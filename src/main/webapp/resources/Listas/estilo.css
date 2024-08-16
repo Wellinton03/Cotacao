@@ -1,0 +1,101 @@
+@charset "utf-8";
+
+body {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	font-weight: normal
+}
+
+header {
+	padding: 5px;
+	margin-bottom: 20px;
+	height: 30px;
+	background-color: #545454;
+	color: #fff;
+	box-shadow: 0px 2px 2px #ccc
+}
+
+#conteudo {
+	padding: 0px 8px
+}
+
+footer {
+	text-align:center;
+	border-top: 1px solid #ccc;
+	padding: 5px 8px;
+	margin-top: 20px;
+	margin-bottom: 10px
+}
+
+h1 {
+	font-size: 24px;
+	font-weight: 500;
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 10px
+}
+
+body #conteudo .Menu {
+	margin: 0px 0px 50px;
+	
+	
+}
+
+body #conteudo .buttonAdd {
+	margin-left: 5px;
+	background-color: #28a745;
+    border-color: #28a745;
+	
+}
+body #conteudo .buttonEdit {
+	margin-left: 5px;
+	background-color: #ffc107;
+    border-color: #ffc107;
+	
+}
+body #conteudo .buttonDelete {
+	margin-left: 5px;
+	 background-color: #dc3545;
+    border-color: #dc3545;
+	
+}
+
+body #conteudo .search-bar {
+    display: flex ;
+    align-items: center;
+    margin-right: 10px;
+}
+
+body #conteudo .search-bar  {
+    position: relative ;
+}
+
+body #conteudo .search-bar  i {
+    position: absolute ;
+    top: 50% ;
+    left: 10px ;
+    transform: translateY(-50%) ;
+    color: blue ;
+}
+
+body #conteudo .search-bar input {
+    padding: 10px 40px  ;
+}
+
+body #conteudo .input-modal .ui-outputlabel {
+    margin: 5px;
+}
+
+body #conteudo .button-modal {
+    display: flex;
+    justify-content: center; 
+    margin-top: 10px;
+    border:none;
+}
+
+
+
+
+
+

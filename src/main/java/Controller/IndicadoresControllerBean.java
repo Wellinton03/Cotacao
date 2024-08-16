@@ -12,7 +12,7 @@ import service.IndicadoresService;
 
 @Named
 @ViewScoped
-public class CadastroIndicadoresBean implements Serializable {
+public class IndicadoresControllerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

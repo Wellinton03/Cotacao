@@ -9,24 +9,29 @@
 	<title>Cadastro De Indicadores</title>
 
 	<f:metadata>
-		<f:viewAction action="#{cadastroIndicadoresBean.todosIndicadores()}" />
+		<f:viewAction action="#{indicadoresControllerBean.todosIndicadores()}" />
 	</f:metadata>
-	<h:outputStylesheet library="ListaDeIndicadores" name="estilo.css" />
+	<h:outputStylesheet library="Listas" name="estilo.css" />
 </h:head>
 
 <body>
 
 	<header>
-		<h:graphicImage library="ListaDeIndicadores" name="logo.png" />
+		<h:graphicImage library="Listas" name="logo.png" />
 	</header>
 	<div id="conteudo">
 		<h:form>
-			<p:megaMenu orientation="horizontal" autoDisplay="false">
+
+			<p:megaMenu orientation="horizontal" autoDisplay="false"
+				styleClass="Menu">
 				<f:facet name="start">
 					<p:graphicImage name="images/primefaces-logo.svg"
 						library="showcase" width="150" />
 				</f:facet>
-				<p:submenu label="Tabelas" icon="gráfico-pi-linha">
+				<p:menuitem value="Quit" icon="pi pi-home"
+					outcome="/CadastroDeIndicadores" />
+				<p:divider layout="vertical" />
+				<p:submenu label="Tabelas" icon="pi pi-database">
 					<p:column>
 						<p:submenu label="Indicadores">
 							<p:menuitem value="Lista de Indicadores"
@@ -36,33 +41,14 @@
 							<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
 						</p:submenu>
 					</p:column>
-
-
 				</p:submenu>
-
-
-
 				<p:submenu label="Events" icon="pi pi-fw pi-calendar">
 					<p:column>
 						<p:submenu label="Event 1">
 							<p:menuitem value="Event 1.1" />
 							<p:menuitem value="Event 1.2" />
 						</p:submenu>
-						<p:submenu label="Event 2">
-							<p:menuitem value="Event 2.1" />
-							<p:menuitem value="Event 2.2" />
-						</p:submenu>
-					</p:column>
 
-					<p:column>
-						<p:submenu label="Event 3">
-							<p:menuitem value="Event 3.1" />
-							<p:menuitem value="Event 3.2" />
-						</p:submenu>
-						<p:submenu label="Event 4">
-							<p:menuitem value="Event 4.1" />
-							<p:menuitem value="Event 4.2" />
-						</p:submenu>
 					</p:column>
 				</p:submenu>
 
@@ -72,28 +58,32 @@
 							<p:menuitem value="Setting 1.1" />
 							<p:menuitem value="Setting 1.2" />
 						</p:submenu>
-						<p:submenu label="Setting 2">
-							<p:menuitem value="Setting 2.1" />
-							<p:menuitem value="Setting 2.2" />
-						</p:submenu>
-						<p:submenu label="Setting 3">
-							<p:menuitem value="Setting 3.1" />
-							<p:menuitem value="Setting 3.2" />
-						</p:submenu>
-					</p:column>
-
-					<p:column>
-						<p:submenu label="Setting 4">
-							<p:menuitem value="Setting 4.1" />
-							<p:menuitem value="Setting 4.2" />
-						</p:submenu>
 					</p:column>
 				</p:submenu>
 			</p:megaMenu>
-			<p:dataTable 
-				value="#{cadastroIndicadoresBean.listaIndicadores}"
-				id="idIndicadores" var="indicadores" 
-				paginator="true" rows="5" paginatorPosition="bottom">
+			<p:growl id="messages" showDetail="true" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton type="button" title="Cadastro" value="Adicionar"
+						icon="pi pi-plus" styleClass="buttonAdd"
+						onclick="PF('indicadorDialogWidgetVar').show()" />
+					<p:commandButton type="button" title="Edição" value="Editar"
+						icon="pi pi-pencil" styleClass="buttonEdit" />
+					<p:commandButton type="button" title="Excluir" value="Excluir"
+						icon="pi pi-trash" styleClass="buttonDelete" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<h:panelGroup styleClass="search-bar">
+						<i class="pi pi-fw pi-search"></i>
+						<p:inputText placeholder="Faça sua busca..." />
+					</h:panelGroup>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable value="#{indicadoresControllerBean.listaIndicadores}"
+				id="idIndicadores" var="indicadores" paginator="true" rows="5"
+				paginatorPosition="bottom">
 				<p:column headerText="id">
 					<h:outputText value="${indicadores.id}" />
 				</p:column>
@@ -101,6 +91,22 @@
 					<h:outputText value="#{indicadores.description}" />
 				</p:column>
 			</p:dataTable>
+
+			<p:dialog header="Novo Indicador"
+				widgetVar="indicadorDialogWidgetVar" modal="true" resizable="false"
+				closeOnEscape="true">
+				<h:panelGrid columns="2" styleClass="input-modal">
+					<p:outputLabel value="Nome: " for="description" />
+					<p:inputText id="description" size="80" maxLength="120" />
+					<p:panelGrid styleClass="button-modal">
+					<p:row>
+				<p:column>
+						<p:commandButton value="salvar" />
+				</p:column>					
+					</p:row>
+					</p:panelGrid>
+				</h:panelGrid>
+			</p:dialog>
 		</h:form>
 	</div>
 
