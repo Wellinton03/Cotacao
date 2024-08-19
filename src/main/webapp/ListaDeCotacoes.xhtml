@@ -77,38 +77,85 @@
 
 				<p:toolbarGroup align="right">
 					<h:panelGroup styleClass="search-bar">
-							<i class="pi pi-fw pi-search"></i>
-							<p:inputText placeholder="Faça sua busca..." />
+						<i class="pi pi-fw pi-search"></i>
+						<p:inputText placeholder="Faça sua busca..." />
 					</h:panelGroup>
 				</p:toolbarGroup>
 			</p:toolbar>
 
-			<p:dataTable value="#{cotacoesControllerBean.listCotacoes()}"
+			<p:dataTable value="#{cotacoesControllerBean.listaCotacoes}"
 				id="idCotacoes" var="cotacoes" paginator="true" rows="5"
 				paginatorPosition="bottom">
 				<p:column headerText="Id" value="#{cotacoes.id} ">
 				</p:column>
-				<p:column headerText="Descrição"  >
+				<p:column headerText="Descrição">
 				</p:column>
-				<p:column headerText="Valor" value="#{cotacoes.valor}" sortBy="#{cotacoes.valor}">
+				<p:column headerText="Valor" value="#{cotacoes.valor}"
+					sortBy="#{cotacoes.valor}">
 				</p:column>
-				<p:column headerText="Data da cotação" value="#{cotacoes.dataHora}" sortBy="#{cotacoes.dataHora}">
+				<p:column headerText="Data da cotação" value="#{cotacoes.dataHora}"
+					sortBy="#{cotacoes.dataHora}">
+				</p:column>
+				<p:column exportable="false" ariaHeaderText="Actions">
+					<p:commandButton icon="pi pi-pencil" update=":form:cotacaoDialog"
+						oncomplete="PF('cotacaoDialogWidgetVar').show()"
+						styleClass="edit-button rounded-button ui-button-success"
+						process="@this"
+						action="#{cotacoesControllerBean.selecionarCotacao(cotacoes)}">
+						<f:setPropertyActionListener value="#{cotacoes}"
+							target="#{cotacoesControllerBean.selectedCotacao}" />
+						<p:resetInput target=":dialogs:manage-product-content" />
+					</p:commandButton>
+					<p:commandButton class="ui-button-warning rounded-button"
+						icon="pi pi-trash" process="@this"
+						oncomplete="PF('deleteProductDialog').show()"
+						action="#{cotacoesControllerBean.selecionarCotacao(cotacoes)}">
+						<f:setPropertyActionListener value="#{cotacoes}"
+							target="#{cotacoesControllerBean.selectedCotacao}" />
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
-			
-			<p:dialog header="Nova Cotação"
-				widgetVar="cotacaoDialogWidgetVar" modal="true" resizable="false"
-				closeOnEscape="true">
+
+			<p:dialog header="Nova Cotação" id="cotacaoDialog" widgetVar="cotacaoDialogWidgetVar"
+				modal="true" resizable="false" closeOnEscape="true" >
 				<h:panelGrid columns="2" styleClass="input-modal">
-					<p:outputLabel value="Nome: " for="description" />
-					<p:inputText id="description" size="80" maxLength="120" />
-					<p:panelGrid styleClass="button-modal">
-					<p:row>
-				<p:column>
-						<p:commandButton value="salvar" />
-				</p:column>					
-					</p:row>
-					</p:panelGrid>
+					<p:outputLabel value="Nome:" for="description" />
+					<p:selectOneMenu id="description"
+						value="#{indicadoresControllerBean.selectedIndicador}"
+						styleClass="menu-modal">
+						<f:selectItem itemLabel="Selecione..." itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems
+							value="#{indicadoresControllerBean.listaIndicadores}"
+							var="indicador" itemLabel="#{indicador.description}"
+							itemValue="#{indicador}" />
+						<p:ajax listener="#{indicadoresControllerBean.onIndicadorChange}"
+							update="listaDeDescricoes" />
+					</p:selectOneMenu>
+
+					<p:dataList id="listaDeDescricoes"
+						value="#{indicadoresControllerBean.listaDeDescricoes}"
+						var="indicador" emptyMessage="Nenhum registro encontrado..."
+						rendered="#{not empty indicadoresControllerBean.listaDeDescricoes}">>
+					</p:dataList>
+
+					<p:outputLabel for="time4" value="Data e Hora:" />
+					<p:datePicker id="time4" size="13"
+						value="#{calendarJava8View.dateTime4}"
+						mindate="#{calendarJava8View.minDateTime}"
+						maxdate="#{calendarJava8View.maxDateTime}" />
+
+					<p:outputLabel value="Valor:" for="valor" />
+					<p:inputMask id="valor"
+						value="#{cotacoesControllerBean.selectedCotacao.valor}"
+						mask="R$99,99" size="5" maxLength="7" />
+					<div>
+						<p:commandButton value="Salvar"
+							actionListener="#{cotacoesControllerBean.salvar()}"
+							oncomplete="PF('cotacaoDialogWidgetVar').hide()" process="@this"
+							styleClass="button-modal" />
+
+					</div>
 				</h:panelGrid>
 			</p:dialog>
 		</h:form>

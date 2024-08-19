@@ -22,11 +22,11 @@ public class Cotacoes implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "data_hora")
+	@Column(name = "data_Hora")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
 
-	@Column(name = "valor")
+	@Column(name = "valor", length = 15)
 	private String valor;
 
 	public Long getId() {
@@ -54,7 +54,7 @@ public class Cotacoes implements Serializable {
 	}
 
 	public String toString() {
-		return "Cotacoes {\n" + "  id=" + id + "\n" + "  dataHora='" + dataHora + '\'' + "\n" + "  valor='" + valor
+		return "Cotacoes {\n" + "  id=" + id + "\n" + "  dataHora='" + dataHora + "/n" + "\n" + "  valor='" + valor
 				+ '\'' + "\n";
 
 	}

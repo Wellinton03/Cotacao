@@ -13,33 +13,29 @@ import util.Transacional;
 @ApplicationScoped
 public class CotacoesService implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Inject
-	private EntityManager manager;
+    @Inject
+    private EntityManager manager;
 
-	public CotacoesService() {
+    public Cotacoes porId(Long id) {
+        return manager.find(Cotacoes.class, id);
+    }
 
-	}
+    public List<Cotacoes> todasCotacoes() {
+        return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
+    }
 
-	public Cotacoes porId(Long id) {
-		return manager.find(Cotacoes.class, id);
-	}
+    @Transacional
+    public Cotacoes salvar(Cotacoes cotacoes) {
+        return manager.merge(cotacoes);
+    }
 
-	public List<Cotacoes> todasCotacoes() {
-		return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
-	}
-
-	@Transacional
-	public Cotacoes salvar(Cotacoes cotacoes) {
-		return manager.merge(cotacoes);
-
-	}
-
-	@Transacional
-	public void Cotacoes(Cotacoes cotacoes) {
-		cotacoes = porId(cotacoes.getId());
-		manager.remove(cotacoes);
-	}
-
+    @Transacional
+    public void excluir(Cotacoes cotacoes) {
+        cotacoes = porId(cotacoes.getId());
+        if (cotacoes != null) {
+            manager.remove(cotacoes);
+        }
+    }
 }
