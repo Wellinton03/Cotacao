@@ -22,13 +22,17 @@ public class CotacoesService implements Serializable {
         return manager.find(Cotacoes.class, id);
     }
 
-    public List<Cotacoes> todasCotacoes() {
+    public List<Cotacoes> todasCot() {
         return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
     }
 
     @Transacional
-    public Cotacoes salvar(Cotacoes cotacoes) {
-        return manager.merge(cotacoes);
+    public void salvar(Cotacoes cotacao) {
+        if (cotacao.getId() == null) {
+            manager.persist(cotacao);
+        } else {
+            manager.merge(cotacao);  
+        }
     }
 
     @Transacional

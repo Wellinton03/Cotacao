@@ -3,11 +3,14 @@ package entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,12 +24,24 @@ public class Cotacoes implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_indicador")
+	private Indicadores indicadores;
+	
+	public Indicadores getIndicadores() {
+		return indicadores;
+	}
 
-	@Column(name = "data_Hora")
+	public void setIndicadores(Indicadores indicadores) {
+		this.indicadores = indicadores;
+	}
+
+	@Column(name = "data_Hora", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
 
-	@Column(name = "valor", length = 15)
+	@Column(name = "valor", nullable = false)
 	private String valor;
 
 	public Long getId() {

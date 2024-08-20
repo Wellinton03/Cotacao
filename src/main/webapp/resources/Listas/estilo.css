@@ -102,7 +102,12 @@ body #conteudo .input-modal .button-modal {
     margin-top: 20px !important; 
 } 
 
+  body #conteudo .dateTimepicker {
+        width: 200px; /* Largura desejada do calendário */
+        font-size: 0.8em; /* Tamanho da fonte dentro do calendário */
+    }
 
+   
 
 
 

@@ -1,6 +1,6 @@
 package Components;
 
-import java.io.Serializable;
+/*import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class CrudView implements Serializable {
 
     public void saveCotacao() {
         if (this.selectedCotacao.getId() == null) {
-            this.cotacoes.add(this.cotacoesService.salvar(this.selectedCotacao));
+            this.cotacoes.add(selectedCotacao);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Adicionada"));
         } else {
             this.cotacoesService.salvar(this.selectedCotacao);
@@ -107,4 +107,4 @@ public class CrudView implements Serializable {
         PrimeFaces.current().executeScript("PF('dtCotacoes').clearFilters()");
     }
 }
-
+*/

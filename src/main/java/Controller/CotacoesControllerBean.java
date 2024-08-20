@@ -13,6 +13,7 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 
 import entity.Cotacoes;
+import entity.Indicadores;
 import service.CotacoesService;
 
 @Named
@@ -24,33 +25,41 @@ public class CotacoesControllerBean implements Serializable {
     @Inject
     private CotacoesService cotacoesService;
 
+    @Inject
     private Cotacoes selectedCotacao;
 
     private List<Cotacoes> listaCotacoes;
+    private List<Indicadores> listaIndicadores;
 
-    @PostConstruct
-    public void init() {
-        todasCotacoes();
-    }
+     public CotacoesControllerBean() {
+     }
+    	
 
     public List<Cotacoes> getListaCotacoes() {
         return listaCotacoes;
-    }
-    
-    public void selecionarCotacao(Cotacoes cotacao) {
-    	this.selectedCotacao = cotacao;
     }
 
     public Cotacoes getSelectedCotacao() {
         return selectedCotacao;
     }
 
+    public void setSelectedCotacao(Cotacoes selectedCotacao) {
+        this.selectedCotacao = selectedCotacao;
+    }
+
+    public List<Indicadores> getListaIndicadores() {
+        return listaIndicadores;
+    }
+
     public void todasCotacoes() {
-        listaCotacoes = cotacoesService.todasCotacoes();
+        listaCotacoes = cotacoesService.todasCot();
     }
 
     public void salvar() {
-    	try {
+        try {
+            System.out.println("valor " + selectedCotacao.getValor());
+            System.out.println("Data: " + selectedCotacao.getDataHora());
+            System.out.println("Indicador ID: " + selectedCotacao.getIndicadores());
             if (selectedCotacao.getId() == null) {
                 cotacoesService.salvar(selectedCotacao);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Adicionada"));
@@ -59,14 +68,11 @@ public class CotacoesControllerBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Atualizada"));
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao salvar cotação", e.getMessage()));
             e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao salvar a cotação"));
         }
-
         PrimeFaces.current().executeScript("PF('cotacaoDialogWidgetVar').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-cotacoes");
-
-        selectedCotacao = null;
+        PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
     }
 
     public void excluir() {
@@ -74,7 +80,7 @@ public class CotacoesControllerBean implements Serializable {
             cotacoesService.excluir(selectedCotacao);
             listaCotacoes.remove(selectedCotacao);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Removida"));
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-cotacoes");
+            PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
         }
     }
 
@@ -84,6 +90,6 @@ public class CotacoesControllerBean implements Serializable {
         }
         listaCotacoes.removeAll(cotacoesSelecionadas);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotações Removidas"));
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-cotacoes");
+        PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
     }
 }

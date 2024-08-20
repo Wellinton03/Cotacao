@@ -37,6 +37,10 @@ public class IndicadoresService implements Serializable {
 	public List<Indicadores> todosIndicadores() {
 		return manager.createQuery("from Indicadores", Indicadores.class).getResultList();
 	}
+	
+	public List<Indicadores> allDescriptions() {
+		return manager.createQuery(" from Indicadores description", Indicadores.class).getResultList();
+	}
 
 	@Transacional
 	public Indicadores salvar(Indicadores indicadores) {
