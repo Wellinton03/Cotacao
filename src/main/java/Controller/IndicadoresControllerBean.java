@@ -22,9 +22,8 @@ public class IndicadoresControllerBean implements Serializable {
     @Inject
     private IndicadoresService indicadoresService;
     
-    private List<Indicadores> listaIndicadores;
     private Indicadores selectedIndicador;
-    private List<Indicadores> listDescriptions; 
+    private List<Indicadores> listaIndicadores = new ArrayList<>();
 
     @PostConstruct
     public void init() {
@@ -39,14 +38,6 @@ public class IndicadoresControllerBean implements Serializable {
         return listaIndicadores;
     }
     
-    public void allDescriptions() {
-    	listDescriptions = indicadoresService.allDescriptions();
-    }
-
-    public List<Indicadores> getListDescriptions() {
-        return listDescriptions;
-    }
-
     public Indicadores getSelectedIndicador() {
         return selectedIndicador;
     }
@@ -56,15 +47,5 @@ public class IndicadoresControllerBean implements Serializable {
         this.selectedIndicador = selectedIndicador;
     }
 
-
-    public void onIndicadorChange() {
-        if (selectedIndicador != null) {
-            listDescriptions = listaIndicadores.stream()
-                .filter(indicador -> indicador.getDescription().equals(selectedIndicador.getDescription()))
-                .collect(Collectors.toList());
-        } else {
-            listDescriptions = new ArrayList<>();
-        }
-    }
 
 }

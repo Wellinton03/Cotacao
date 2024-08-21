@@ -23,7 +23,7 @@ public class CotacoesService implements Serializable {
     }
 
     public List<Cotacoes> todasCot() {
-        return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
+        return manager.createQuery("from Cotacoes ", Cotacoes.class).getResultList();
     }
 
     @Transacional

@@ -115,12 +115,12 @@
 				widgetVar="cotacaoDialogWidgetVar" modal="true" resizable="false"
 				closeOnEscape="true">
 				<h:panelGrid columns="2" styleClass="input-modal">
-					<p:outputLabel value="Nome:" for="description" />
-					<p:selectOneMenu id="description"
+					<p:outputLabel value="Nome:" for="indicador" />
+					<p:selectOneMenu id="indicador" 
 						value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
 						styleClass="menu-modal" converter="indicadoresConverter">
 						<f:selectItem itemLabel="Selecione..."
-							noSelectionOption="true" />
+							noSelectionOption="true" itemValue="#{null}" />
 						<f:selectItems
 							value="#{indicadoresControllerBean.listaIndicadores}"
 							var="indicador" itemLabel="#{indicador.description}"
