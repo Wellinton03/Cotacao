@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -15,27 +16,52 @@ import org.primefaces.PrimeFaces;
 import entity.Cotacoes;
 import entity.Indicadores;
 import service.CotacoesService;
+import service.IndicadoresService;
 
 @Named
-@ViewScoped
+@RequestScoped
 public class CotacoesControllerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Inject
     private CotacoesService cotacoesService;
+    
+    
+    @Inject
+    private IndicadoresService indicadorService;
 
+    private Indicadores indicadores;
+    
+@Inject
+private Indicadores indicador() {
+if (indicadores == null) {
+	indicadores = new Indicadores();
+}
+ return indicadores;
+}
     @Inject
     private Cotacoes selectedCotacao;
 
     private List<Cotacoes> listaCotacoes;
     private List<Indicadores> listaIndicadores;
 
-     public CotacoesControllerBean() {
-     }
+    public void todosIndicadores() {
+        listaIndicadores = indicadorService.todosIndicadores();
+    }
+
+    public List<Indicadores> getListaIndicadores() {
+    	if(listaIndicadores == null) {
+    		listaIndicadores = indicadorService.todosIndicadores();
+    	}
+        return listaIndicadores;
+    }
     	
 
     public List<Cotacoes> getListaCotacoes() {
+    	if(listaCotacoes == null) {
+    		 listaCotacoes = cotacoesService.todasCotacoes();
+    	}
         return listaCotacoes;
     }
 
@@ -47,32 +73,21 @@ public class CotacoesControllerBean implements Serializable {
         this.selectedCotacao = selectedCotacao;
     }
 
-    public List<Indicadores> getListaIndicadores() {
-        return listaIndicadores;
-    }
-
     public void todasCotacoes() {
-        listaCotacoes = cotacoesService.todasCot();
+        listaCotacoes = cotacoesService.todasCotacoes();
     }
 
     public void salvar() {
-        try {
-            System.out.println("valor " + selectedCotacao.getValor());
-            System.out.println("Data: " + selectedCotacao.getDataHora());
-            System.out.println("Indicador ID: " + selectedCotacao.getIndicadores());
-            if (selectedCotacao.getId() == null) {
-                cotacoesService.salvar(selectedCotacao);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Adicionada"));
-            } else {
-                cotacoesService.salvar(selectedCotacao);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Atualizada"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao salvar a cotação"));
+    	System.out.println("chegou");
+        if (selectedCotacao.getIndicadores() == null) {
+        	System.out.println("Cotacao a ser salva: " + selectedCotacao);
+        	System.out.println("Indicador selecionado: " + selectedCotacao.getIndicadores());
+            return;
+        }else {
+        
+        
+        cotacoesService.salvar(selectedCotacao);
         }
-        PrimeFaces.current().executeScript("PF('cotacaoDialogWidgetVar').hide()");
-        PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
     }
 
     public void excluir() {
@@ -82,14 +97,5 @@ public class CotacoesControllerBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Removida"));
             PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
         }
-    }
-
-    public void excluirSelecionados(List<Cotacoes> cotacoesSelecionadas) {
-        for (Cotacoes cotacao : cotacoesSelecionadas) {
-            cotacoesService.excluir(cotacao);
-        }
-        listaCotacoes.removeAll(cotacoesSelecionadas);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotações Removidas"));
-        PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
     }
 }

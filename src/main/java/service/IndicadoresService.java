@@ -3,50 +3,23 @@ package service;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 import entity.Indicadores;
-import util.Transacional;
 @Named
 @ApplicationScoped
 public class IndicadoresService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private List<Indicadores> getListaIndicadores;
 	
+	@Inject
 	private EntityManager manager;
 	
-	public IndicadoresService() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("cotacoesDatabase");
-        this.manager = factory.createEntityManager();
-    }
-	@PostConstruct
-    public void init() {
-        getListaIndicadores = todosIndicadores();
-        System.out.println("Lista de indicadores populada: " + getListaIndicadores);
-    }
-	
-	public List<Indicadores> getListaIndicadores(){
-		return getListaIndicadores();
-	}
-	public Indicadores findByDescription(String description) {
-		TypedQuery<Indicadores> query = manager.createQuery(" description from indicadores",
-				Indicadores.class);
-		try {
-            return (Indicadores) query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-	}
-
 	public Indicadores porId(Long Id) {
 		return manager.find(Indicadores.class, Id);
 	}
@@ -63,18 +36,33 @@ public class IndicadoresService implements Serializable {
 		return manager.createQuery("from Indicadores", Indicadores.class).getResultList();
 	}
 	
-	public List<Indicadores> allDescriptions() {
-		return manager.createQuery(" from Indicadores description", Indicadores.class).getResultList();
-	}
+	public void salvar(Indicadores indicadores) {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            if (indicadores.getId() == null) {
+                manager.persist(indicadores);
+            } else {
+                manager.merge(indicadores);  
+            }
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
-	@Transacional
-	public Indicadores salvar(Indicadores indicadores) {
-		return manager.merge(indicadores);
-	}
-
-	@Transacional
-	public void excluir(Indicadores indicadores) {
-		indicadores = porId(indicadores.getId());
-		manager.remove(indicadores);
-	}
+    public void excluir(Indicadores indicadores) {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            manager.remove(indicadores.getId());
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

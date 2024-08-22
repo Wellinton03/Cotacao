@@ -9,7 +9,7 @@
 	<title>Cadastro De Indicadores</title>
 
 	<f:metadata>
-		<f:viewAction action="#{indicadoresControllerBean.todosIndicadores()}" />
+		<f:viewAction action="#{cotacoesControllerBean.todosIndicadores()}" />
 	</f:metadata>
 	<h:outputStylesheet library="Listas" name="estilo.css" />
 </h:head>
@@ -19,8 +19,7 @@
 	<header>
 		<h:graphicImage library="Listas" name="logo.png" />
 	</header>
-	<div id="conteudo">
-		<h:form>
+		<h:form id="conteudo">
 
 			<p:megaMenu orientation="horizontal" autoDisplay="false"
 				styleClass="Menu">
@@ -68,10 +67,6 @@
 					<p:commandButton type="button" title="Cadastro" value="Adicionar"
 						icon="pi pi-plus" styleClass="buttonAdd"
 						onclick="PF('indicadorDialogWidgetVar').show()" />
-					<p:commandButton type="button" title="Edição" value="Editar"
-						icon="pi pi-pencil" styleClass="buttonEdit" />
-					<p:commandButton type="button" title="Excluir" value="Excluir"
-						icon="pi pi-trash" styleClass="buttonDelete" />
 				</p:toolbarGroup>
 
 				<p:toolbarGroup align="right">
@@ -83,12 +78,29 @@
 			</p:toolbar>
 			<p:dataTable value="#{indicadoresControllerBean.listaIndicadores}"
 				id="idIndicadores" var="indicadores" paginator="true" rows="5"
-				paginatorPosition="bottom">
+				paginatorPosition="bottom" sortBy="#{indicadores.id}">
 				<p:column headerText="id">
 					<h:outputText value="${indicadores.id}" />
 				</p:column>
 				<p:column headerText="Descrição" sortBy="#{indicadores.description}">
 					<h:outputText value="#{indicadores.description}" />
+				</p:column>
+				
+				<p:column exportable="false">
+					<p:commandButton icon="pi pi-pencil"
+						styleClass="edit-button rounded-button ui-button-success"
+						process="@form"
+						actionListener="#{indicadoresControllerBean.salvar()}">
+						<f:setPropertyActionListener value="#{indicadores}"
+							target="#{indicadoresControllerBean.selectedIndicador}" />
+					</p:commandButton>
+
+					<p:commandButton class="ui-button-warning rounded-button"
+						icon="pi pi-trash"
+						actionListener="#{indicadoresControllerBean.excluir()}">
+						<f:setPropertyActionListener value="#{indicadores}"
+							target="#{indicadoresControllerBean.selectedIndicador}" />
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 
@@ -97,18 +109,19 @@
 				closeOnEscape="true">
 				<h:panelGrid columns="2" styleClass="input-modal">
 					<p:outputLabel value="Nome: " for="description" />
-					<p:inputText id="description" size="80" maxLength="120" />
-					<p:panelGrid styleClass="button-modal">
-					<p:row>
-				<p:column>
-						<p:commandButton value="salvar" />
-				</p:column>					
-					</p:row>
-					</p:panelGrid>
+					<p:inputText id="description"
+						value="#{indicadoresControllerBean.selectedIndicador.description}"
+						size="80" maxLength="120" />
+					<div>
+						<p:commandButton value="Salvar"
+							action="#{indicadoresControllerBean.salvar()}"
+							styleClass="button-modal" update=":conteudo:idIndicadores"
+							onclick="PF('indicadorDialogWidgetVar').show()">
+						</p:commandButton>
+					</div>
 				</h:panelGrid>
 			</p:dialog>
 		</h:form>
-	</div>
 
 	<footer> Lista De Indicadores </footer>
 </body>

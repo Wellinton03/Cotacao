@@ -28,15 +28,15 @@ public class Indicadores implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable=false)
 	private String description;
 	
 	
 	
 	@Override
 	public String toString() {
-        return description;
-    }
+	    return "Indicador [ID: " + id + ", Descrição: " + description + "]";
+	}
 	
 
 	

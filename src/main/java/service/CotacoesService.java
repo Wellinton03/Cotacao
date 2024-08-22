@@ -22,7 +22,7 @@ public class CotacoesService implements Serializable {
         return manager.find(Cotacoes.class, id);
     }
 
-    public List<Cotacoes> todasCot() {
+    public List<Cotacoes> todasCotacoes() {
         return manager.createQuery("from Cotacoes ", Cotacoes.class).getResultList();
     }
 

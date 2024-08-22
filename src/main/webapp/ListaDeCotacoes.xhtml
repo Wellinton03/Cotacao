@@ -67,39 +67,35 @@
 			<p:toolbar>
 				<p:toolbarGroup>
 					<p:commandButton type="button" title="Cadastro" value="Adicionar"
-						icon="pi pi-plus" styleClass="buttonAdd"
-						onclick="PF('cotacaoDialogWidgetVar').show()" />
+						icon="pi pi-plus" styleClass="buttonAdd" />
 				</p:toolbarGroup>
 
-				<p:toolbarGroup align="right">
-					<h:panelGroup styleClass="search-bar">
-						<i class="pi pi-fw pi-search"></i>
-						<p:inputText placeholder="Faça sua busca..." />
-					</h:panelGroup>
-				</p:toolbarGroup>
+
 			</p:toolbar>
 
 			<p:dataTable value="#{cotacoesControllerBean.listaCotacoes}"
-				id="idCotacoes" var="cotacoes" paginator="true" rows="5"
+				  id="idCotacoes" var="cotacoes" paginator="true" rows="5"
 				paginatorPosition="bottom">
-				<p:column headerText="Id" value="#{cotacoes.id} ">
+				<p:column headerText="Id">
+					<h:outputText value="${cotacoes.id}" />
 				</p:column>
-				<p:column headerText="Indicador" value="#{cotacoes.indicadores}">
+				<p:column headerText="Indicador">
+					<h:outputText value="${cotacoes.indicadores.id}" />
 				</p:column>
-				<p:column headerText="Valor" value="#{cotacoes.valor}"
-					sortBy="#{cotacoes.valor}">
+				<p:column headerText="Valor" sortBy="#{cotacoes.valor}">
+					<h:outputText value="${cotacoes.valor}" />
 				</p:column>
-				<p:column headerText="Data da cotação" value="#{cotacoes.dataHora}"
-					sortBy="#{cotacoes.dataHora}">
+				<p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
+					<h:outputText value="#{cotacoes.dataHora}" />
+
 				</p:column>
-				<p:column exportable="false" ariaHeaderText="Actions">
+				<p:column exportable="false">
 					<p:commandButton icon="pi pi-pencil"
 						styleClass="edit-button rounded-button ui-button-success"
 						process="@form"
 						actionListener="#{cotacoesControllerBean.salvar()}">
 						<f:setPropertyActionListener value="#{cotacoes}"
 							target="#{cotacoesControllerBean.selectedCotacao}" />
-						<p:resetInput target=":dialogs:manage-product-content" />
 					</p:commandButton>
 
 					<p:commandButton class="ui-button-warning rounded-button"
@@ -111,21 +107,19 @@
 				</p:column>
 			</p:dataTable>
 
-			<p:dialog header="Nova Cotação" id="cotacaoDialog"
-				widgetVar="cotacaoDialogWidgetVar" modal="true" resizable="false"
-				closeOnEscape="true">
+			<p:dialog header="Nova Cotação" id="cotacaoDialog" modal="true"
+				resizable="false" closeOnEscape="true">
 				<h:panelGrid columns="2" styleClass="input-modal">
 					<p:outputLabel value="Nome:" for="indicador" />
-					<p:selectOneMenu id="indicador" 
+					<h:selectOneMenu id="indicador"
 						value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
 						styleClass="menu-modal" converter="indicadoresConverter">
-						<f:selectItem itemLabel="Selecione..."
-							noSelectionOption="true" itemValue="#{null}" />
-						<f:selectItems
-							value="#{indicadoresControllerBean.listaIndicadores}"
+						<f:selectItem itemLabel="Selecione..." noSelectionOption="true"
+							itemValue="#{null}" />
+						<f:selectItems value="#{cotacoesControllerBean.listaIndicadores}"
 							var="indicador" itemLabel="#{indicador.description}"
 							itemValue="#{indicador}" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 
 
 
@@ -137,13 +131,14 @@
 
 					<p:outputLabel value="Valor:" for="valor" />
 					<p:inputNumber id="valor"
-						value="#{cotacoesControllerBean.selectedCotacao.valor}" symbol="R$" symbolPosition="p"
-						decimalSeparator="," thousandSeparator="." />
+						value="#{cotacoesControllerBean.selectedCotacao.valor}"
+						symbol="R$" symbolPosition="p" decimalSeparator=","
+						thousandSeparator="." />
 					<div>
 						<p:commandButton value="Salvar"
-							actionListener="#{cotacoesControllerBean.salvar()}"
-							styleClass="button-modal" update="@form"
-							 />
+							action="#{cotacoesControllerBean.salvar()}"
+							styleClass="button-modal" update="@form">
+						</p:commandButton>
 
 					</div>
 				</h:panelGrid>
