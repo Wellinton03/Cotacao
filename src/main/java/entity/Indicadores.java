@@ -20,8 +20,7 @@ public class Indicadores implements Serializable {
 
 	
 	public Indicadores() {
-		
-	}
+    }
 	private static final long serialVersionUID = 1L;
 
 	@Id

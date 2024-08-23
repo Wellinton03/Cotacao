@@ -3,8 +3,6 @@ package Controller;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -19,7 +17,7 @@ import service.CotacoesService;
 import service.IndicadoresService;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class CotacoesControllerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,29 +25,56 @@ public class CotacoesControllerBean implements Serializable {
     @Inject
     private CotacoesService cotacoesService;
     
-    
     @Inject
     private IndicadoresService indicadorService;
-
-    private Indicadores indicadores;
     
-@Inject
-private Indicadores indicador() {
-if (indicadores == null) {
-	indicadores = new Indicadores();
-}
- return indicadores;
-}
-    @Inject
+    private String termoPesquisa;
+    
     private Cotacoes selectedCotacao;
 
     private List<Cotacoes> listaCotacoes;
     private List<Indicadores> listaIndicadores;
-
+    
+    public void initNewCotacao() {
+ 	    selectedCotacao = new Cotacoes();
+ 	}
+    
     public void todosIndicadores() {
         listaIndicadores = indicadorService.todosIndicadores();
     }
+    
+    public void todasCotacoes() {
+        listaCotacoes = cotacoesService.todasCotacoes();
+    }
 
+    public void salvar() {
+ 	    System.out.println("selectedIndicador: " + selectedCotacao);
+ 	    if (selectedCotacao != null) {
+ 	        System.out.println("selectedIndicador não é nulo");
+ 	       cotacoesService.salvar(selectedCotacao);
+ 	        listaCotacoes = cotacoesService.todasCotacoes();
+ 	    } else {
+ 	        System.out.println("cotacoesService é nulo");
+ 	    }
+ 	}
+
+    public void excluir() {
+        if (selectedCotacao != null) {
+            cotacoesService.excluir(selectedCotacao);
+            listaCotacoes.remove(selectedCotacao);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Removida"));
+            PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
+        }
+    }
+    
+    public String getTermoPesquisa() {
+		return termoPesquisa;
+	}
+    
+    public void setTermoPesquisa(String pesquisa) {
+		this.termoPesquisa = pesquisa;
+	}
+    
     public List<Indicadores> getListaIndicadores() {
     	if(listaIndicadores == null) {
     		listaIndicadores = indicadorService.todosIndicadores();
@@ -57,7 +82,6 @@ if (indicadores == null) {
         return listaIndicadores;
     }
     	
-
     public List<Cotacoes> getListaCotacoes() {
     	if(listaCotacoes == null) {
     		 listaCotacoes = cotacoesService.todasCotacoes();
@@ -72,30 +96,9 @@ if (indicadores == null) {
     public void setSelectedCotacao(Cotacoes selectedCotacao) {
         this.selectedCotacao = selectedCotacao;
     }
-
-    public void todasCotacoes() {
-        listaCotacoes = cotacoesService.todasCotacoes();
-    }
-
-    public void salvar() {
-    	System.out.println("chegou");
-        if (selectedCotacao.getIndicadores() == null) {
-        	System.out.println("Cotacao a ser salva: " + selectedCotacao);
-        	System.out.println("Indicador selecionado: " + selectedCotacao.getIndicadores());
-            return;
-        }else {
-        
-        
-        cotacoesService.salvar(selectedCotacao);
-        }
-    }
-
-    public void excluir() {
-        if (selectedCotacao != null) {
-            cotacoesService.excluir(selectedCotacao);
-            listaCotacoes.remove(selectedCotacao);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cotação Removida"));
-            PrimeFaces.current().ajax().update("mainForm:messages", "mainForm:idCotacoes");
-        }
-    }
+    
+    public boolean isCotacaoSeleciona() {
+		System.out.println(selectedCotacao);
+		return selectedCotacao != null && selectedCotacao.getId() != null;
+	}
 }

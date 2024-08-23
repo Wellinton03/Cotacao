@@ -1,65 +1,86 @@
 package Controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.PrimeFaces;
-
 import entity.Indicadores;
 import service.IndicadoresService;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class IndicadoresControllerBean implements Serializable {
-	
+
 	private List<Indicadores> listaIndicadores;
-    private static final long serialVersionUID = 1L;
-    @Inject
-    private Indicadores selectedIndicador;
-    
-    @Inject
-    private IndicadoresService indicadorService;
-    
-   
-    
-    public List<Indicadores> getListaIndicadores() {
-    	if(listaIndicadores == null) {
-    		listaIndicadores = indicadorService.todosIndicadores();
-    	}
-        return listaIndicadores;
-    }
-    
-    public void salvar() {
-    	System.out.println(selectedIndicador);
-        indicadorService.salvar(selectedIndicador);
-        listaIndicadores = indicadorService.todosIndicadores(); 
-    }
-    public void excluir() {
-    	System.out.println(selectedIndicador.getId());
-    	if (selectedIndicador != null) {
-    		indicadorService.excluir(selectedIndicador);
-    		listaIndicadores.remove(selectedIndicador);
-    	}
-    }
+	private static final long serialVersionUID = 1L;
+	
+	private Indicadores selectedIndicador;
+	
+	private String termoPesquisa;
 
-    public void setSelectedIndicador(Indicadores selectedIndicador) {
-        this.selectedIndicador = selectedIndicador;
-    }
-    
-    public Indicadores getSelectedIndicador() {
-        return selectedIndicador;
-    }
-    
+	@Inject
+	private IndicadoresService indicadorService;
+	
+ 	public List<Indicadores> getListaIndicadores() {
+		if (listaIndicadores == null) {
+			listaIndicadores = indicadorService.todosIndicadores();
+		}
+		return listaIndicadores;
+	}
+ 	
+ 	public void initNewIndicador() {
+ 	    selectedIndicador = new Indicadores();
+ 	}
+ 	
+ 	public void pesquisa() {
+ 		listaIndicadores = indicadorService.buscar(termoPesquisa);
+ 	}
 
+ 	public void salvar() {
+ 	    System.out.println("selectedIndicador: " + selectedIndicador);
+ 	    if (selectedIndicador != null) {
+ 	        System.out.println("selectedIndicador não é nulo");
+ 	        indicadorService.salvar(selectedIndicador);
+ 	        listaIndicadores = indicadorService.todosIndicadores();
+ 	    } else {
+ 	        System.out.println("selectedIndicador é nulo");
+ 	    }
+ 	}
+
+	public void excluir() {
+		System.out.println("excluir " + selectedIndicador);
+		if (selectedIndicador != null) {
+			indicadorService.excluir(selectedIndicador);
+			selectedIndicador = null;
+			
+			listaIndicadores = indicadorService.todosIndicadores();
+		}
+	}
+	
+	public String getTermoPesquisa() {
+		return termoPesquisa;
+	}
+    
+    public void setTermoPesquisa(String pesquisa) {
+		this.termoPesquisa = pesquisa;
+	}
+
+	public void setSelectedIndicador(Indicadores selectedIndicador) {
+		this.selectedIndicador = selectedIndicador;
+	}
+
+	public Indicadores getSelectedIndicador() {
+		return selectedIndicador;
+	}
+	
+	public boolean isIndicadorSeleciona() {
+		System.out.println(selectedIndicador);
+		return selectedIndicador != null && selectedIndicador.getId() != null;
+	}
 
 }

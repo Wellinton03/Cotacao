@@ -40,69 +40,58 @@ h1 {
 	margin-bottom: 10px
 }
 
-body #conteudo .Menu {
+body #form .Menu {
 	margin: 0px 0px 50px;
 	
 	
 }
 
-body #conteudo .buttonAdd {
+body #form .buttonAdd {
 	margin-left: 5px;
 	background-color: #28a745;
     border-color: #28a745;
 	
 }
-body #conteudo .buttonEdit {
+body #form .buttonEdit {
 	margin-left: 5px;
 	background-color: #ffc107;
     border-color: #ffc107;
 	
 }
-body #conteudo .buttonDelete {
+body #form .buttonDelete {
 	margin-left: 5px;
 	 background-color: #dc3545;
     border-color: #dc3545;
 	
 }
 
-body #conteudo .search-bar {
+body #form .search-bar {
     display: flex ;
     align-items: center;
-    margin-right: 10px;
+    margin: 0px 10px;
 }
 
-body #conteudo .search-bar  {
-    position: relative ;
+body #form .search-bar input {
+    padding: 10px 10px ;
+    margin: 0px 10px;
 }
 
-body #conteudo .search-bar  i {
-    position: absolute ;
-    top: 50% ;
-    left: 10px ;
-    transform: translateY(-50%) ;
-    color: blue ;
-}
-
-body #conteudo .search-bar input {
-    padding: 10px 40px  ;
-}
-
-body #conteudo .menu-modal {
+body #form .menu-modal {
     margin: 5px;
 }
 
-body #conteudo .input-modal input {
+body #form .input-modal input {
     margin: 5px;
 }
 
 
-body #conteudo .input-modal .button-modal {
+body #form .input-modal .button-modal {
     display: flex;
     justify-content: center;
     margin-top: 20px !important; 
 } 
 
-  body #conteudo .dateTimepicker {
+  body #form .dateTimepicker {
         width: 200px; /* Largura desejada do calendário */
         font-size: 0.8em; /* Tamanho da fonte dentro do calendário */
     }

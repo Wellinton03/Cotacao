@@ -57,7 +57,8 @@ public class IndicadoresService implements Serializable {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            manager.remove(indicadores.getId());
+            indicadores = manager.merge(indicadores);
+            manager.remove(indicadores);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

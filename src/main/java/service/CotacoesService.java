@@ -6,8 +6,10 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import entity.Cotacoes;
+import entity.Indicadores;
 import util.Transacional;
 
 @ApplicationScoped
@@ -26,20 +28,34 @@ public class CotacoesService implements Serializable {
         return manager.createQuery("from Cotacoes ", Cotacoes.class).getResultList();
     }
 
-    @Transacional
-    public void salvar(Cotacoes cotacao) {
-        if (cotacao.getId() == null) {
-            manager.persist(cotacao);
-        } else {
-            manager.merge(cotacao);  
+    public void salvar(Cotacoes cotacoes) {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            if (cotacoes.getId() == null) {
+                manager.persist(cotacoes);
+            } else {
+                manager.merge(cotacoes);  
+            }
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            throw e;
         }
     }
 
-    @Transacional
     public void excluir(Cotacoes cotacoes) {
-        cotacoes = porId(cotacoes.getId());
-        if (cotacoes != null) {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            cotacoes = manager.merge(cotacoes);
             manager.remove(cotacoes);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            throw e;
         }
     }
 }
