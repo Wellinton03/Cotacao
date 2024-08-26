@@ -20,7 +20,7 @@ header {
 	box-shadow: 0px 2px 2px #ccc
 }
 
-#conteudo {
+#form {
 	padding: 0px 8px
 }
 
@@ -76,25 +76,46 @@ body #form .search-bar input {
     margin: 0px 10px;
 }
 
-body #form .menu-modal {
-    margin: 5px;
+/* Ajuste para alinhar as labels à esquerda e melhorar o espaçamento */
+body #form .modal-grid {
+    width: 100%;
+    padding: 5px;
 }
 
-body #form .input-modal input {
-    margin: 5px;
+body #form .modal-grid .label-col {
+    text-align: left;
+    font-weight: bold;
+    padding: 2px;
+    vertical-align: middle;
+}
+
+body #form .modal-grid .input-col {
+    padding: 5px;
+}
+
+body #form .modal-grid input, 
+body #form .modal-grid select, 
+body #form .modal-grid .ui-inputnumber,
+body #form .modal-grid .ui-calendar {
+    width: 100%;
+    margin: 0px;
+}
+
+body #form .button-modal {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body #form .button-modal:hover {
+    background-color: #0056b3;
 }
 
 
-body #form .input-modal .button-modal {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px !important; 
-} 
-
-  body #form .dateTimepicker {
-        width: 200px; /* Largura desejada do calendário */
-        font-size: 0.8em; /* Tamanho da fonte dentro do calendário */
-    }
 
    
 

@@ -1,7 +1,7 @@
 package Converter;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.io.Serializable;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -13,8 +13,9 @@ import entity.Indicadores;
 import service.IndicadoresService;
 
 @FacesConverter("indicadoresConverter")
-public class IndicadoresConverter implements Converter {
+public class IndicadoresConverter implements Converter, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private IndicadoresService indicadoresService;
 
 	@Inject

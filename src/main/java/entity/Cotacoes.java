@@ -29,6 +29,7 @@ public class Cotacoes implements Serializable {
 	@JoinColumn(name = "id_indicador")
 	private Indicadores indicadores;
 	
+	
 	public Indicadores getIndicadores() {
 		return indicadores;
 	}
@@ -70,7 +71,7 @@ public class Cotacoes implements Serializable {
 
 	public String toString() {
 		return "Cotacoes {\n" + "  id=" + id + "\n" + "  dataHora='" + dataHora + "/n" + "\n" + "  valor='" + valor
-				+ '\'' + "\n";
+				+ '\'' + "\n" + "  idIndicador " + indicadores.getId()  + "  " + indicadores.getDescription();
 
 	}
 

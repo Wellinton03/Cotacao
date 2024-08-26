@@ -19,8 +19,8 @@
 	<header>
 		<h:graphicImage library="Listas" name="logo.png" />
 	</header>
-	<div id="form">
-		<h:form>
+	
+		<h:form id="form">
 
 			<p:megaMenu orientation="horizontal" autoDisplay="false"
 				styleClass="Menu">
@@ -83,8 +83,8 @@
 					value="Editar"
 					icon="pi pi-pencil" 
 					styleClass="buttonEdit" 
-					disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-					actionListener="#{indicadoresControllerBean.salvar()}"
+					disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
+					actionListener="#{cotacoesControllerBean.salvar(cotacoesControllerBean.cotacaoSeleciona)}"
 					oncomplete="PF('cotacaoDialogWidgetVar').show()" 
 					update="cotacoesDialog"
     				process="@this">
@@ -96,8 +96,8 @@
 					value="Excluir"
 					icon="pi pi-trash" 
 					styleClass="buttonDelete" 
-					actionListener="#{indicadoresControllerBean.excluir()}"
-					disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
+					actionListener="#{cotacoesControllerBean.excluir()}"
+					disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
 					update="cotacoesDialog toolbar cotacoesDataTable"
 					process="@this" />
 					
@@ -133,12 +133,12 @@
 				selection="#{cotacoesControllerBean.selectedCotacao}" 
 				rowKey="#{cotacoes.id}">
 				
-				<p:column headerText="Id">
-					<h:outputText value="${cotacoes.id}" />
-				</p:column>
+				<p:ajax event="rowSelect" update="form:toolbar" />
+		
+				<p:ajax event="rowUnselect" update="form:toolbar" />
 				
 				<p:column headerText="Indicador">
-					<h:outputText value="${cotacoes.indicadores.id}" />
+					<h:outputText value="${cotacoes.indicadores.description}" />
 				</p:column>
 				
 				<p:column headerText="Valor" sortBy="#{cotacoes.valor}">
@@ -152,84 +152,66 @@
 			</p:dataTable>
 
 			<p:dialog 
-				header="Nova Cotação" 
-				value="#{cotacoesControllerBean.listaCotacoes}"
-				id="cotacoesDialog" 
-				widgetVar="cotacaoDialogWidgetVar"
-				modal="true"
-				resizable="false" 
-				closeOnEscape="true"
-				>
-				
-				<h:panelGrid 
-				columns="2" 
-				styleClass="input-modal"
-				id="cotacoesPanelGrid">
-				
-				<p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
-				
-					<p:outputLabel 
-						value="Nome:" 
-						for="indicador" />
-						
-					<p:selectOneMenu 
-						id="indicador"
-						value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
-						styleClass="menu-modal" 
-						converter="indicadoresConverter">
-						
-					<f:selectItem 
-						itemLabel="Selecione..." 
-						noSelectionOption="true"
-						itemValue="#{null}" />
-						
-					<f:selectItems value="#{cotacoesControllerBean.listaIndicadores}"
-						var="indicador" 
-						itemLabel="#{indicador.description}"
-						itemValue="#{indicador}" />
-						
-					</p:selectOneMenu>
+    			header="Nova Cotação" 
+    			id="cotacoesDialog" 
+ 				widgetVar="cotacaoDialogWidgetVar"
+    			modal="true"
+    			resizable="false" 
+    			closeOnEscape="true">
+    			
+    			<p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
+    
+    <h:panelGrid 
+        columns="2" 
+        columnClasses="label-col, input-col"
+        id="cotacoesPanelGrid"
+        rendered="#{cotacoesControllerBean.selectedCotacao ne null}"
+        styleClass="modal-grid">
 
-					<p:outputLabel 
-						for="dateTime" 
-						value="Data e Hora:" />
-						
-					<p:calendar id="dateTime" 
-						pattern="dd/MM/yyyy HH:mm:ss"
-						showOn="button" 
-						dateOnly="true" 
-						showButtonPanel="false"
-						widgetVar="datetimePicker"
-						value="#{cotacoesControllerBean.selectedCotacao.dataHora}" />
+        <p:outputLabel value="Nome:" for="indicador" />
+        <p:selectOneMenu 
+            id="indicador"
+            value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
+            styleClass="menu-modal" 
+            converter="indicadoresConverter">
+            <f:selectItem itemLabel="Selecione..." noSelectionOption="true" itemValue="#{null}" />
+            <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador" 
+                itemLabel="#{indicador.description}" itemValue="#{indicador}" />
+        </p:selectOneMenu>
 
-					<p:outputLabel 
-						value="Valor:" 
-						for="valor" />
-						
-					<p:inputNumber 
-						id="valor"
-						value="#{cotacoesControllerBean.selectedCotacao.valor}"
-						symbol="R$" 
-						symbolPosition="p" 
-						decimalSeparator=","
-						thousandSeparator="." />
-						
-					<div>
-					<p:commandButton 
-						id="saveCommandButton" 
-						value="Salvar"
-						actionListener="#{cotacoesControllerBean.salvar()}"
-						styleClass="button-modal" 
-						update="cotacoesDataTable cotacoesPanelGrid"
-						oncomplete="PF('cotacaoDialogWidgetVar').hide()" 
-						process="cotacoesDialog"  />
+        <p:outputLabel value="Data:" for="dateTime" />
+        <p:calendar 
+            id="dateTime" 
+            pattern="dd/MM/yyyy HH:mm:ss"
+            dateOnly="true"
+            showButtonPanel="false"
+            widgetVar="datetimePicker"
+            value="#{cotacoesControllerBean.selectedCotacao.dataHora}"
+            size="20" />
 
-					</div>
-				</h:panelGrid>
-			</p:dialog>
+        <p:outputLabel value="Valor:" for="valor" />
+        <p:inputNumber 
+            id="valor"
+            value="#{cotacoesControllerBean.selectedCotacao.valor}"
+            symbol="R$" 
+            symbolPosition="p" 
+            decimalSeparator=","
+            thousandSeparator="." />
+
+        <p:outputLabel value="" />
+        <div style="text-align:right;">
+            <p:commandButton 
+                id="saveCommandButton" 
+                value="Salvar"
+                actionListener="#{cotacoesControllerBean.salvar()}"
+                styleClass="button-modal" 
+                update="cotacoesDataTable cotacoesPanelGrid "
+                oncomplete="PF('cotacaoDialogWidgetVar').hide()" 
+                process="cotacoesDialog cotacoesPanelGrid" />
+        </div>
+    </h:panelGrid>
+</p:dialog>
 		</h:form>
-	</div>
-
 	<footer> Lista De Indicadores </footer>
 </body>
 
