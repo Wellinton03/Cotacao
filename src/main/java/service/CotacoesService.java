@@ -36,17 +36,22 @@ public class CotacoesService implements Serializable {
     }
 
     public void salvar(Cotacoes cotacoes) {
-    	System.out.println("chegou");
+    	System.out.println("chegou no service " + cotacoes);
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
+            System.out.println("Iniciando transação para salvar: " + cotacoes);
             if (cotacoes.getId() == null) {
                 manager.persist(cotacoes);
+                System.out.println("Cotação persistida com ID: " + cotacoes.getId());
             } else {
-                manager.merge(cotacoes);  
+                manager.merge(cotacoes);
+                System.out.println("Cotação mesclada com ID: " + cotacoes.getId());
             }
             tx.commit();
+            System.out.println("Transação commitada com sucesso");
         } catch (Exception e) {
+            System.out.println("Exceção durante transação, fazendo rollback");
             tx.rollback();
             e.printStackTrace();
             throw e;

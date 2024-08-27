@@ -24,10 +24,6 @@ public class CotacoesControllerBean implements Serializable {
 
 	private Cotacoes selectedCotacao;
 
-	private String valor;
-	private Indicadores indicadores;
-	private Date dataHora;
-
 	private List<Cotacoes> listaCotacoes;
 	private List<Indicadores> listaIndicadores;
 
@@ -35,8 +31,9 @@ public class CotacoesControllerBean implements Serializable {
 	private CotacoesService cotacoesService;
 
 	public void initNewCotacao() {
-		selectedCotacao = new Cotacoes();
-		selectedCotacao.setIndicadores(new Indicadores());
+	    selectedCotacao = new Cotacoes();
+	    selectedCotacao.setIndicadores(new Indicadores()); 
+	    listaIndicadores = indicadorService.todosIndicadores();
 	}
 
 	public void todosIndicadores() {
@@ -48,17 +45,14 @@ public class CotacoesControllerBean implements Serializable {
 	}
 
 	public void salvar() {
-		System.out.println("chegou");
-		selectedCotacao = new Cotacoes();
-		System.out.println("selectedCotacao " + selectedCotacao);
-		if (selectedCotacao != null) {
-			Indicadores indicador = selectedCotacao.getIndicadores();
-			System.out.println("Indicador selecionado: " + indicador);
-			cotacoesService.salvar(selectedCotacao);
-			listaCotacoes = cotacoesService.todasCotacoes();
-		} else {
-			System.out.println("selectedCotacao é nulo");
-		}
+	    if (selectedCotacao.getIndicadores() != null) {
+	    	System.out.println("verificou " + selectedCotacao);
+	        cotacoesService.salvar(selectedCotacao);
+	        listaCotacoes = cotacoesService.todasCotacoes();
+	        System.out.println("chegou");
+	    } else {
+	        System.out.println("Indicador está nulo!");
+	    }
 	}
 
 	public void excluir() {
@@ -93,5 +87,4 @@ public class CotacoesControllerBean implements Serializable {
 	public boolean isCotacaoSeleciona() {
 		return selectedCotacao != null && selectedCotacao.getId() != null;
 	}
-
 }

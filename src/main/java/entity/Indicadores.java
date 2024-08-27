@@ -27,7 +27,7 @@ public class Indicadores implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-	@Column(name = "description", nullable=false)
+	@Column(name = "description")
 	private String description;
 	
 	

@@ -21,6 +21,10 @@
 	</header>
 	
 		<h:form id="form">
+		
+		<p:commandButton 
+		 actionListener="#{cotacoesControllerBean.initNewCotacao()}"
+		 	action="/SalvarCotacao?faces-redirect=true"/>
 
 			<p:megaMenu orientation="horizontal" autoDisplay="false"
 				styleClass="Menu">
@@ -84,7 +88,7 @@
 					icon="pi pi-pencil" 
 					styleClass="buttonEdit" 
 					disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
-					actionListener="#{cotacoesControllerBean.salvar(cotacoesControllerBean.cotacaoSeleciona)}"
+					actionListener="#{cotacoesControllerBean.salvar()}"
 					oncomplete="PF('cotacaoDialogWidgetVar').show()" 
 					update="cotacoesDialog"
     				process="@this">
@@ -173,10 +177,14 @@
             id="indicador"
             value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
             styleClass="menu-modal" 
-            converter="indicadoresConverter">
-            <f:selectItem itemLabel="Selecione..." noSelectionOption="true" itemValue="#{null}" />
+            converter="indicadoresConverter"
+            required="true">
+            <f:selectItem itemLabel="#{cotacoesControllerBean.selectedCotacao.indicadores == null ? 'Selecione...' : cotacoesControllerBean.selectedCotacao.indicadores.description}" 
+            	noSelectionOption="true" 
+            	itemValue="#{cotacoesControllerBean.selectedCotacao.indicadores}" 
+            	disabled="#{not empty cotacoesControllerBean.selectedCotacao.indicadores}" />
             <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador" 
-                itemLabel="#{indicador.description}" itemValue="#{indicador}" />
+                itemLabel="#{indicador.description}" itemValue="#{indicador}" required="true" />
         </p:selectOneMenu>
 
         <p:outputLabel value="Data:" for="dateTime" />
@@ -187,7 +195,8 @@
             showButtonPanel="false"
             widgetVar="datetimePicker"
             value="#{cotacoesControllerBean.selectedCotacao.dataHora}"
-            size="20" />
+            size="20"
+            required="true" />
 
         <p:outputLabel value="Valor:" for="valor" />
         <p:inputNumber 
@@ -196,10 +205,9 @@
             symbol="R$" 
             symbolPosition="p" 
             decimalSeparator=","
-            thousandSeparator="." />
-
-        <p:outputLabel value="" />
-        <div style="text-align:right;">
+            thousandSeparator="."
+            required="true" />
+            
             <p:commandButton 
                 id="saveCommandButton" 
                 value="Salvar"
@@ -207,10 +215,10 @@
                 styleClass="button-modal" 
                 update="cotacoesDataTable cotacoesPanelGrid "
                 oncomplete="PF('cotacaoDialogWidgetVar').hide()" 
-                process="cotacoesDialog cotacoesPanelGrid" />
-        </div>
+                process="cotacoesDialog " />
     </h:panelGrid>
 </p:dialog>
+	<h:messages globalOnly="true" />
 		</h:form>
 	<footer> Lista De Indicadores </footer>
 </body>

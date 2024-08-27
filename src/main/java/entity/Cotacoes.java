@@ -38,11 +38,11 @@ public class Cotacoes implements Serializable {
 		this.indicadores = indicadores;
 	}
 
-	@Column(name = "data_Hora", nullable = false)
+	@Column(name = "data_Hora")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
 
-	@Column(name = "valor", nullable = false)
+	@Column(name = "valor")
 	private String valor;
 
 	public Long getId() {
