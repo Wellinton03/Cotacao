@@ -1,7 +1,6 @@
 package Controller;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.view.ViewScoped;
@@ -17,74 +16,91 @@ import service.IndicadoresService;
 @ViewScoped
 public class CotacoesControllerBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Inject
-	private IndicadoresService indicadorService;
+    @Inject
+    private IndicadoresService indicadorService;
 
-	private Cotacoes selectedCotacao;
+    private Cotacoes selectedCotacao;
 
-	private List<Cotacoes> listaCotacoes;
-	private List<Indicadores> listaIndicadores;
+    private String termoPesquisa;
+    
+    private List<Cotacoes> listaCotacoes;
+    private List<Indicadores> listaIndicadores;
 
-	@Inject
-	private CotacoesService cotacoesService;
+    @Inject
+    private CotacoesService cotacoesService;
 
-	public void initNewCotacao() {
-	    selectedCotacao = new Cotacoes();
-	    selectedCotacao.setIndicadores(new Indicadores()); 
-	    listaIndicadores = indicadorService.todosIndicadores();
-	}
+    public void initNewCotacao() {
+        selectedCotacao = new Cotacoes();
+        selectedCotacao.setIndicadores(new Indicadores());
+        listaIndicadores = indicadorService.todosIndicadores();
+    }
 
-	public void todosIndicadores() {
-		listaIndicadores = indicadorService.todosIndicadores();
-	}
+    public void todosIndicadores() {
+        listaIndicadores = indicadorService.todosIndicadores();
+    }
 
-	public void todasCotacoes() {
-		listaCotacoes = cotacoesService.todasCotacoes();
-	}
+    public void todasCotacoes() {
+        listaCotacoes = cotacoesService.todasCotacoes();
+    }
+     
+    public void pesquisa() {
+        listaCotacoes = cotacoesService.buscar(termoPesquisa);
+    }
 
-	public void salvar() {
-	    if (selectedCotacao.getIndicadores() != null) {
-	    	System.out.println("verificou " + selectedCotacao);
-	        cotacoesService.salvar(selectedCotacao);
-	        listaCotacoes = cotacoesService.todasCotacoes();
-	        System.out.println("chegou");
-	    } else {
-	        System.out.println("Indicador está nulo!");
-	    }
-	}
+    public void salvar() {
+        System.out.println("*** Iniciando Salvar!");
+        if (selectedCotacao.getIndicadores() != null) {
+            System.out.println("verificou " + selectedCotacao);
+            cotacoesService.salvar(selectedCotacao);
+            listaCotacoes = cotacoesService.todasCotacoes();
+            System.out.println("chegou");
+        } else {
+            System.out.println("Indicador está nulo!");
+        }
+    }
 
-	public void excluir() {
-		if (selectedCotacao != null) {
-			cotacoesService.excluir(selectedCotacao);
-			listaCotacoes.remove(selectedCotacao);
-		}
-	}
+    public void excluir() {
+        if (selectedCotacao != null) {
+            cotacoesService.excluir(selectedCotacao);
+            listaCotacoes.remove(selectedCotacao);
+        }
+    }
 
-	public List<Indicadores> getListaIndicadores() {
-		if (listaIndicadores == null) {
-			listaIndicadores = indicadorService.todosIndicadores();
-		}
-		return listaIndicadores;
-	}
+    public List<Indicadores> getListaIndicadores() {
+        if (listaIndicadores == null) {
+            listaIndicadores = indicadorService.todosIndicadores();
+        }
+        return listaIndicadores;
+    }
 
-	public List<Cotacoes> getListaCotacoes() {
-		if (listaCotacoes == null) {
-			listaCotacoes = cotacoesService.todasCotacoes();
-		}
-		return listaCotacoes;
-	}
+    public List<Cotacoes> getListaCotacoes() {
+        if (listaCotacoes == null) {
+            listaCotacoes = cotacoesService.todasCotacoes();
+        }
+        return listaCotacoes;
+    }
 
-	public Cotacoes getSelectedCotacao() {
-		return selectedCotacao;
-	}
+    public Cotacoes getSelectedCotacao() {
+        return selectedCotacao;
+    }
 
-	public void setSelectedCotacao(Cotacoes selectedCotacao) {
-		this.selectedCotacao = selectedCotacao;
-	}
+    public void setSelectedCotacao(Cotacoes selectedCotacao) {
+        this.selectedCotacao = selectedCotacao;
+    }
 
-	public boolean isCotacaoSeleciona() {
-		return selectedCotacao != null && selectedCotacao.getId() != null;
-	}
+    public boolean isCotacaoSeleciona() {
+        return selectedCotacao != null && selectedCotacao.getId() != null;
+    }
+
+    public String getTermoPesquisa() {
+        return termoPesquisa;
+    }
+
+    public void setTermoPesquisa(String termoPesquisa) {
+        this.termoPesquisa = termoPesquisa;
+    }
+    
+    
 }

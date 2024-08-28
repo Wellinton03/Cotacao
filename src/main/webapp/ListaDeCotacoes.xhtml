@@ -1,226 +1,210 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-	<meta charset="UTF-8" />
-	<title>Cadastro De Indicadores</title>
+    <h:head>
+        <meta charset="UTF-8"/>
+        <title>Cadastro De Indicadores</title>
 
-	<f:metadata>
-		<f:viewAction action="#{cotacoesControllerBean.todasCotacoes()}" />
-	</f:metadata>
-	<h:outputStylesheet library="Listas" name="estilo.css" />
-</h:head>
+        <f:metadata>
+            <f:viewAction action="#{cotacoesControllerBean.todasCotacoes()}"/>
+        </f:metadata>
+        <h:outputStylesheet library="Listas" name="estilo.css"/>
+    </h:head>
 
-<body>
+    <h:body>
 
-	<header>
-		<h:graphicImage library="Listas" name="logo.png" />
-	</header>
-	
-		<h:form id="form">
-		
-		<p:commandButton 
-		 actionListener="#{cotacoesControllerBean.initNewCotacao()}"
-		 	action="/SalvarCotacao?faces-redirect=true"/>
+        <header>
+            <h:graphicImage library="Listas" name="logo.png"/>
+        </header>
 
-			<p:megaMenu orientation="horizontal" autoDisplay="false"
-				styleClass="Menu">
-				<f:facet name="start">
-					<p:graphicImage name="images/primefaces-logo.svg"
-						library="showcase" width="150" />
-				</f:facet>
-				<p:menuitem value="Quit" icon="pi pi-home"
-					outcome="/CadastroDeIndicadores" />
-				<p:divider layout="vertical" />
-				<p:submenu label="Tabelas" icon="pi pi-database">
-					<p:column>
-						<p:submenu label="Indicadores">
-							<p:menuitem value="Lista de Indicadores"
-								outcome="/ListaDeIndicadores" />
-						</p:submenu>
-						<p:submenu label="Cotações">
-							<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
-						</p:submenu>
-					</p:column>
-				</p:submenu>
-				<p:submenu label="Events" icon="pi pi-fw pi-calendar">
-					<p:column>
-						<p:submenu label="Event 1">
-							<p:menuitem value="Event 1.1" />
-							<p:menuitem value="Event 1.2" />
-						</p:submenu>
+        <h:form id="form">
 
-					</p:column>
-				</p:submenu>
+            <p:megaMenu orientation="horizontal" autoDisplay="false" styleClass="Menu">
+                <f:facet name="start">
+                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase" width="150"/>
+                </f:facet>
+                <p:menuitem value="Quit" icon="pi pi-home" outcome="/CadastroDeIndicadores"/>
+                <p:divider layout="vertical"/>
+                <p:submenu label="Tabelas" icon="pi pi-database">
+                    <p:column>
+                        <p:submenu label="Indicadores">
+                            <p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores"/>
+                        </p:submenu>
+                        <p:submenu label="Cotações">
+                            <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:submenu label="Events" icon="pi pi-fw pi-calendar">
+                    <p:column>
+                        <p:submenu label="Event 1">
+                            <p:menuitem value="Event 1.1"/>
+                            <p:menuitem value="Event 1.2"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
 
-				<p:submenu label="Settings" icon="pi pi-fw pi-cog">
-					<p:column>
-						<p:submenu label="Setting 1">
-							<p:menuitem value="Setting 1.1" />
-							<p:menuitem value="Setting 1.2" />
-						</p:submenu>
-					</p:column>
-				</p:submenu>
-			</p:megaMenu>
+                <p:submenu label="Settings" icon="pi pi-fw pi-cog">
+                    <p:column>
+                        <p:submenu label="Setting 1">
+                            <p:menuitem value="Setting 1.1"/>
+                            <p:menuitem value="Setting 1.2"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+            </p:megaMenu>
 
-			<p:growl id="messages" showDetail="true" />
+            <p:growl id="messages" showDetail="true"/>
 
-			<p:toolbar id="toolbar">
-			<p:toolbarGroup>
-				<p:commandButton 
-    				title="Cadastro" 
-   					value="Adicionar"
-    				icon="pi pi-plus" 
-    				styleClass="buttonAdd"
-    				actionListener="#{cotacoesControllerBean.initNewCotacao()}"
-    				oncomplete="PF('cotacaoDialogWidgetVar').show()"
-    				update="cotacoesDialog"
-    				process="@this">
-    					<p:resetInput target="cotacoesDialog"/>
-				</p:commandButton>
-					
-				<p:commandButton 
-					title="Edição" 
-					value="Editar"
-					icon="pi pi-pencil" 
-					styleClass="buttonEdit" 
-					disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
-					actionListener="#{cotacoesControllerBean.salvar()}"
-					oncomplete="PF('cotacaoDialogWidgetVar').show()" 
-					update="cotacoesDialog"
-    				process="@this">
-    			<p:resetInput target="cotacoesDialog"/>
-    				</p:commandButton>
-					
-				<p:commandButton 
-					title="Excluir" 
-					value="Excluir"
-					icon="pi pi-trash" 
-					styleClass="buttonDelete" 
-					actionListener="#{cotacoesControllerBean.excluir()}"
-					disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
-					update="cotacoesDialog toolbar cotacoesDataTable"
-					process="@this" />
-					
-			</p:toolbarGroup>
+            <p:toolbar id="toolbar">
+                <p:toolbarGroup>
+                    <p:commandButton
+                        title="Cadastro"
+                        value="Adicionar"
+                        icon="pi pi-plus"
+                        styleClass="buttonAdd"
+                        actionListener="#{cotacoesControllerBean.initNewCotacao()}"
+                        oncomplete="PF('cotacaoDialogWidgetVar').show()"
+                        update="cotacoesDialog"
+                        process="@this">
+                        <p:resetInput target="cotacoesDialog"/>
+                    </p:commandButton>
 
-			<p:toolbarGroup 
-				align="right">
-				<h:panelGroup styleClass="search-bar">
-						
-					<p:commandButton 
-						value="Pesquisar" 
-						icon="pi pi-fw pi-search"
-						actionListener="#{indicadoresControllerBean.pesquisa()}" 
-						update="cotacoesDataTable" />
-						
-					<p:inputText 
-						placeholder="Faça sua busca..."
-						value="#{indicadoresControllerBean.termoPesquisa}" />
-						
-				</h:panelGroup>
-			</p:toolbarGroup>
-		</p:toolbar>
+                    <p:commandButton
+                        title="Edição"
+                        value="Editar"
+                        icon="pi pi-pencil"
+                        styleClass="buttonEdit"
+                        disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
+                        actionListener="#{cotacoesControllerBean.salvar()}"
+                        oncomplete="PF('cotacaoDialogWidgetVar').show()"
+                        update="cotacoesDialog"
+                        process="@this">
+                        <p:resetInput target="cotacoesDialog"/>
+                    </p:commandButton>
 
-			<p:dataTable 
-				value="#{cotacoesControllerBean.listaCotacoes}"
-				id="cotacoesDataTable" 
-				var="cotacoes" 
-				paginator="true" 
-				rows="5"
-				paginatorPosition="bottom"
-				sortBy="#{cotacoes.id}" 
-				selectionMode="single" 
-				selection="#{cotacoesControllerBean.selectedCotacao}" 
-				rowKey="#{cotacoes.id}">
-				
-				<p:ajax event="rowSelect" update="form:toolbar" />
-		
-				<p:ajax event="rowUnselect" update="form:toolbar" />
-				
-				<p:column headerText="Indicador">
-					<h:outputText value="${cotacoes.indicadores.description}" />
-				</p:column>
-				
-				<p:column headerText="Valor" sortBy="#{cotacoes.valor}">
-					<h:outputText value="${cotacoes.valor}" />
-				</p:column>
-				
-				<p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
-					<h:outputText value="#{cotacoes.dataHora}" />
-					
-				</p:column>
-			</p:dataTable>
+                    <p:commandButton
+                        title="Excluir"
+                        value="Excluir"
+                        icon="pi pi-trash"
+                        styleClass="buttonDelete"
+                        actionListener="#{cotacoesControllerBean.excluir()}"
+                        disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
+                        update="cotacoesDialog toolbar cotacoesDataTable"
+                        process="@this"/>
+                </p:toolbarGroup>
 
-			<p:dialog 
-    			header="Nova Cotação" 
-    			id="cotacoesDialog" 
- 				widgetVar="cotacaoDialogWidgetVar"
-    			modal="true"
-    			resizable="false" 
-    			closeOnEscape="true">
-    			
-    			<p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
-    
-    <h:panelGrid 
-        columns="2" 
-        columnClasses="label-col, input-col"
-        id="cotacoesPanelGrid"
-        rendered="#{cotacoesControllerBean.selectedCotacao ne null}"
-        styleClass="modal-grid">
+                <p:toolbarGroup align="right">
+                    <h:panelGroup styleClass="search-bar">
+                       
+                        <p:inputText
+                            placeholder="Faça sua busca..."
+                            value="#{cotacoesControllerBean.termoPesquisa}"/>
+                        
+                         <p:commandButton
+                            icon="pi pi-fw pi-search"
+                            actionListener="#{cotacoesControllerBean.pesquisa()}"
+                            update="cotacoesDataTable"/>
+                    </h:panelGroup>
+                </p:toolbarGroup>
+            </p:toolbar>
 
-        <p:outputLabel value="Nome:" for="indicador" />
-        <p:selectOneMenu 
-            id="indicador"
-            value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
-            styleClass="menu-modal" 
-            converter="indicadoresConverter"
-            required="true">
-            <f:selectItem itemLabel="#{cotacoesControllerBean.selectedCotacao.indicadores == null ? 'Selecione...' : cotacoesControllerBean.selectedCotacao.indicadores.description}" 
-            	noSelectionOption="true" 
-            	itemValue="#{cotacoesControllerBean.selectedCotacao.indicadores}" 
-            	disabled="#{not empty cotacoesControllerBean.selectedCotacao.indicadores}" />
-            <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador" 
-                itemLabel="#{indicador.description}" itemValue="#{indicador}" required="true" />
-        </p:selectOneMenu>
+            <p:dataTable
+                value="#{cotacoesControllerBean.listaCotacoes}"
+                id="cotacoesDataTable"
+                var="cotacoes"
+                paginator="true"
+                rows="5"
+                paginatorPosition="bottom"
+                sortBy="#{cotacoes.id}"
+                selectionMode="single"
+                selection="#{cotacoesControllerBean.selectedCotacao}"
+                rowKey="#{cotacoes.id}">
 
-        <p:outputLabel value="Data:" for="dateTime" />
-        <p:calendar 
-            id="dateTime" 
-            pattern="dd/MM/yyyy HH:mm:ss"
-            dateOnly="true"
-            showButtonPanel="false"
-            widgetVar="datetimePicker"
-            value="#{cotacoesControllerBean.selectedCotacao.dataHora}"
-            size="20"
-            required="true" />
+                <p:ajax event="rowSelect" update="form:toolbar"/>
+                <p:ajax event="rowUnselect" update="form:toolbar"/>
 
-        <p:outputLabel value="Valor:" for="valor" />
-        <p:inputNumber 
-            id="valor"
-            value="#{cotacoesControllerBean.selectedCotacao.valor}"
-            symbol="R$" 
-            symbolPosition="p" 
-            decimalSeparator=","
-            thousandSeparator="."
-            required="true" />
-            
-            <p:commandButton 
-                id="saveCommandButton" 
-                value="Salvar"
-                actionListener="#{cotacoesControllerBean.salvar()}"
-                styleClass="button-modal" 
-                update="cotacoesDataTable cotacoesPanelGrid "
-                oncomplete="PF('cotacaoDialogWidgetVar').hide()" 
-                process="cotacoesDialog " />
-    </h:panelGrid>
-</p:dialog>
-	<h:messages globalOnly="true" />
-		</h:form>
-	<footer> Lista De Indicadores </footer>
-</body>
+                <p:column headerText="Indicador">
+                    <h:outputText value="#{cotacoes.indicadores.description}"/>
+                </p:column>
+
+                <p:column headerText="Valor" sortBy="#{cotacoes.valor}">
+                    <h:outputText value="#{cotacoes.valor}"/>
+                </p:column>
+
+                <p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
+                    <h:outputText value="#{cotacoes.dataHora}"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:dialog
+                header="Nova Cotação"
+                id="cotacoesDialog"
+                widgetVar="cotacaoDialogWidgetVar"
+                modal="true"
+                resizable="false"
+                closeOnEscape="true">
+
+                <p:defaultCommand target="saveCommandButton"/>
+
+                <h:panelGrid
+                    columns="2"
+                    columnClasses="label-col, input-col"
+                    id="cotacoesPanelGrid"
+                    rendered="#{cotacoesControllerBean.selectedCotacao ne null}"
+                    styleClass="modal-grid">
+
+                    <p:outputLabel value="Nome:" for="indicador"/>
+                    <p:selectOneMenu
+                        id="indicador"
+                        value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
+                        styleClass="menu-modal"
+                        converter="indicadoresConverter"
+                        required="true">
+                        <f:selectItem itemLabel="#{cotacoesControllerBean.selectedCotacao.indicadores == null ? 'Selecione...' : cotacoesControllerBean.selectedCotacao.indicadores.description}"
+                                      noSelectionOption="true"
+                                      itemValue="#{cotacoesControllerBean.selectedCotacao.indicadores}"
+                                      itemDisabled="#{not empty cotacoesControllerBean.selectedCotacao.indicadores}"/>
+                        <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador"
+                                       itemLabel="#{indicador.description}" itemValue="#{indicador}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Data:" for="dateTime"/>
+                    <p:calendar
+                        id="dateTime"
+                        pattern="dd/MM/yyyy HH:mm:ss"
+                        showButtonPanel="false"
+                        widgetVar="datetimePicker"
+                        value="#{cotacoesControllerBean.selectedCotacao.dataHora}"
+                        size="20"
+                        required="true"/>
+
+                    <p:outputLabel value="Valor:" for="valor"/>
+                    <p:inputNumber
+                        id="valor"
+                        value="#{cotacoesControllerBean.selectedCotacao.valor}"
+                        symbol="R$"
+                        symbolPosition="p"
+                        decimalSeparator=","
+                        thousandSeparator="."
+                        required="true"/>
+
+                    <p:commandButton
+                        id="saveCommandButton"
+                        value="Salvar"
+                        actionListener="#{cotacoesControllerBean.salvar()}"
+                        styleClass="button-modal"
+                        update="cotacoesDataTable cotacoesPanelGrid"
+                        oncomplete="PF('cotacaoDialogWidgetVar').hide()"
+                        process="cotacoesDialog"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <h:messages globalOnly="true"/>
+        </h:form>
+    </h:body>
 
 </html>

@@ -1,184 +1,184 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-	<meta charset="UTF-8" />
-	<title>Cadastro De Indicadores</title>
+    <h:head>
+        <meta charset="UTF-8" />
+        <title>Cadastro De Indicadores</title>
 
-	<f:metadata>
-		<f:viewAction action="#{cotacoesControllerBean.todosIndicadores()}" />
-	</f:metadata>
-	<h:outputStylesheet library="Listas" name="estilo.css" />
-</h:head>
+        <f:metadata>
+            <f:viewAction action="#{cotacoesControllerBean.todosIndicadores()}" />
+        </f:metadata>
+        <h:outputStylesheet library="Listas" name="estilo.css" />
+    </h:head>
 
-<body>
+    <body>
 
-	<header>
-		<h:graphicImage library="Listas" name="logo.png" />
-	</header>
-	<h:form id="form">
+        <header>
+            <h:graphicImage library="Listas" name="logo.png" />
+        </header>
+        <h:form id="form">
 
-		<p:megaMenu orientation="horizontal" autoDisplay="false"
-			styleClass="Menu">
-			<f:facet name="start">
-				<p:graphicImage name="images/primefaces-logo.svg" library="showcase"
-					width="150" />
-			</f:facet>
-			<p:menuitem value="Quit" icon="pi pi-home"
-				outcome="/CadastroDeIndicadores" />
-			<p:divider layout="vertical" />
-			<p:submenu label="Tabelas" icon="pi pi-database">
-				<p:column>
-					<p:submenu label="Indicadores">
-						<p:menuitem value="Lista de Indicadores"
-							outcome="/ListaDeIndicadores" />
-					</p:submenu>
-					<p:submenu label="Cotações">
-						<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
-					</p:submenu>
-				</p:column>
-			</p:submenu>
-			<p:submenu label="Events" icon="pi pi-fw pi-calendar">
-				<p:column>
-					<p:submenu label="Event 1">
-						<p:menuitem value="Event 1.1" />
-						<p:menuitem value="Event 1.2" />
-					</p:submenu>
+            <p:megaMenu orientation="horizontal" autoDisplay="false"
+                        styleClass="Menu">
+                <f:facet name="start">
+                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase"
+                                    width="150" />
+                </f:facet>
+                <p:menuitem value="Quit" icon="pi pi-home"
+                            outcome="/CadastroDeIndicadores" />
+                <p:divider layout="vertical" />
+                <p:submenu label="Tabelas" icon="pi pi-database">
+                    <p:column>
+                        <p:submenu label="Indicadores">
+                            <p:menuitem value="Lista de Indicadores"
+                                        outcome="/ListaDeIndicadores" />
+                        </p:submenu>
+                        <p:submenu label="Cotações">
+                            <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:submenu label="Events" icon="pi pi-fw pi-calendar">
+                    <p:column>
+                        <p:submenu label="Event 1">
+                            <p:menuitem value="Event 1.1" />
+                            <p:menuitem value="Event 1.2" />
+                        </p:submenu>
 
-				</p:column>
-			</p:submenu>
+                    </p:column>
+                </p:submenu>
 
-			<p:submenu label="Settings" icon="pi pi-fw pi-cog">
-				<p:column>
-					<p:submenu label="Setting 1">
-						<p:menuitem value="Setting 1.1" />
-						<p:menuitem value="Setting 1.2" />
-					</p:submenu>
-				</p:column>
-			</p:submenu>
-		</p:megaMenu>
-		<p:growl id="messages" showDetail="true" />
+                <p:submenu label="Settings" icon="pi pi-fw pi-cog">
+                    <p:column>
+                        <p:submenu label="Setting 1">
+                            <p:menuitem value="Setting 1.1" />
+                            <p:menuitem value="Setting 1.2" />
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+            </p:megaMenu>
+            <p:growl id="messages" showDetail="true" />
 
-		<p:toolbar id="toolbar">
-			<p:toolbarGroup>
-				<p:commandButton 
-    				title="Cadastro" 
-   					value="Adicionar"
-    				icon="pi pi-plus" 
-    				styleClass="buttonAdd"
-    				actionListener="#{indicadoresControllerBean.initNewIndicador()}"
-    				oncomplete="PF('indicadorDialogWidgetVar').show()"
-    				update="descricaoDialog"
-    				process="@this">
-    					<p:resetInput target="descricaoDialog"/>
-				</p:commandButton>
-					
-				<p:commandButton 
-					title="Edição" 
-					value="Editar"
-					icon="pi pi-pencil" 
-					styleClass="buttonEdit" 
-					disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-					actionListener="#{indicadoresControllerBean.salvar()}"
-					oncomplete="PF('indicadorDialogWidgetVar').show()" 
-					update="descricaoDialog"
-    				process="@this">
-    			<p:resetInput target="descricaoDialog"/>
-    				</p:commandButton>
-					
-				<p:commandButton 
-					title="Excluir" 
-					value="Excluir"
-					icon="pi pi-trash" 
-					styleClass="buttonDelete" 
-					actionListener="#{indicadoresControllerBean.excluir()}"
-					disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-					update="descricaoDialog toolbar IndicadoresDataTable"
-					process="@this" />
-					
-			</p:toolbarGroup>
+            <p:toolbar id="toolbar">
+                <p:toolbarGroup>
+                    <p:commandButton 
+                        title="Cadastro" 
+                        value="Adicionar"
+                        icon="pi pi-plus" 
+                        styleClass="buttonAdd"
+                        actionListener="#{indicadoresControllerBean.initNewIndicador()}"
+                        oncomplete="PF('indicadorDialogWidgetVar').show()"
+                        update="descricaoDialog"
+                        process="@this">
+                        <p:resetInput target="descricaoDialog"/>
+                    </p:commandButton>
 
-		<p:toolbarGroup 
-				align="right">
-				<h:panelGroup styleClass="search-bar">
-				
-					<p:inputText 
-						placeholder="Faça sua busca..."
-						value="#{indicadoresControllerBean.termoPesquisa}" />
-						
-					<p:commandButton 
-						value="Pesquisar" 
-						icon="pi pi-fw pi-search"
-						actionListener="#{indicadoresControllerBean.pesquisa()}" 
-						update="IndicadoresDataTable" />
-						
-				</h:panelGroup>
-			</p:toolbarGroup>
-		</p:toolbar>
-		
-		<p:dataTable 
-			value="#{indicadoresControllerBean.listaIndicadores}"
-			id="IndicadoresDataTable" 
-			var="indicadores" 
-			paginator="true" 
-			rows="5"
-			paginatorPosition="bottom" 
-			sortBy="#{indicadores.id}" 
-			selectionMode="single" 
-			selection="#{indicadoresControllerBean.selectedIndicador}" 
-			rowKey="#{indicadores.id}">
-			
-		<p:ajax event="rowSelect" update="form:toolbar" />
-		
-		<p:ajax event="rowUnselect" update="form:toolbar" />		
-						
-			<p:column headerText="id">
-				<h:outputText value="${indicadores.id}" />
-			</p:column>
-			
-			<p:column headerText="Descrição" sortBy="#{indicadores.description}">
-				<h:outputText value="#{indicadores.description}" />
-			</p:column>
-			
-		</p:dataTable>
+                    <p:commandButton 
+                        title="Edição" 
+                        value="Editar"
+                        icon="pi pi-pencil" 
+                        styleClass="buttonEdit" 
+                        disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
+                        actionListener="#{indicadoresControllerBean.salvar()}"
+                        oncomplete="PF('indicadorDialogWidgetVar').show()" 
+                        update="descricaoDialog"
+                        process="@this">
+                        <p:resetInput target="descricaoDialog"/>
+                    </p:commandButton>
 
-		<p:dialog 
-			header="Novo Indicador"
-			id="descricaoDialog"
-			widgetVar="indicadorDialogWidgetVar"
-			modal="true" 
-			resizable="false" 
-			closeOnEscape="true">
-			
-			<p:defaultCommand target="saveCommandButton" scope="descricaoDialog"/>
-			
-			<h:panelGrid 
-				columns="2" 
-				styleClass="input-modal"
-				id="indicadorPanelGrid"
-				rendered="#{indicadoresControllerBean.selectedIndicador ne null}">
-				
-				<p:outputLabel value="Nome: " for="description" />
-				<p:inputText 
-					id="description"
-					value="#{indicadoresControllerBean.selectedIndicador.description}"
-					size="80" 
-					maxLength="120" />
-				<div>
-					<p:commandButton id="saveCommandButton" value="Salvar"
-						actionListener="#{indicadoresControllerBean.salvar()}"
-						styleClass="button-modal" update="IndicadoresDataTable indicadorPanelGrid"
-						oncomplete="PF('indicadorDialogWidgetVar').hide()" process="descricaoDialog"  />
+                    <p:commandButton 
+                        title="Excluir" 
+                        value="Excluir"
+                        icon="pi pi-trash" 
+                        styleClass="buttonDelete" 
+                        actionListener="#{indicadoresControllerBean.excluir()}"
+                        disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
+                        update="descricaoDialog toolbar IndicadoresDataTable"
+                        process="@this" />
 
-				</div>
-			</h:panelGrid>
-		</p:dialog>
-	</h:form>
+                </p:toolbarGroup>
 
-	<footer> Lista De Indicadores </footer>
-</body>
+                <p:toolbarGroup 
+                    align="right">
+                    <h:panelGroup styleClass="search-bar">
+
+                        <p:inputText 
+                            placeholder="Faça sua busca..."
+                            value="#{indicadoresControllerBean.termoPesquisa}" />
+
+                        <p:commandButton 
+                            value="Pesquisar" 
+                            icon="pi pi-fw pi-search"
+                            actionListener="#{indicadoresControllerBean.pesquisa()}" 
+                            update="IndicadoresDataTable" />
+
+                    </h:panelGroup>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable 
+                value="#{indicadoresControllerBean.listaIndicadores}"
+                id="IndicadoresDataTable" 
+                var="indicadores" 
+                paginator="true" 
+                rows="5"
+                paginatorPosition="bottom" 
+                sortBy="#{indicadores.id}" 
+                selectionMode="single" 
+                selection="#{indicadoresControllerBean.selectedIndicador}" 
+                rowKey="#{indicadores.id}">
+
+                <p:ajax event="rowSelect" update="form:toolbar" />
+
+                <p:ajax event="rowUnselect" update="form:toolbar" />		
+
+                <p:column headerText="id">
+                    <h:outputText value="${indicadores.id}" />
+                </p:column>
+
+                <p:column headerText="Descrição" sortBy="#{indicadores.description}">
+                    <h:outputText value="#{indicadores.description}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog 
+                header="Novo Indicador"
+                id="descricaoDialog"
+                widgetVar="indicadorDialogWidgetVar"
+                modal="true" 
+                resizable="false" 
+                closeOnEscape="true">
+
+                <p:defaultCommand target="saveCommandButton" scope="descricaoDialog"/>
+
+                <h:panelGrid 
+                    columns="2" 
+                    styleClass="input-modal"
+                    id="indicadorPanelGrid"
+                    rendered="#{indicadoresControllerBean.selectedIndicador ne null}">
+
+                    <p:outputLabel value="Nome: " for="description" />
+                    <p:inputText 
+                        id="description"
+                        value="#{indicadoresControllerBean.selectedIndicador.description}"
+                        size="80" 
+                        maxlength="120" />
+                    <div>
+                        <p:commandButton id="saveCommandButton" value="Salvar"
+                                         actionListener="#{indicadoresControllerBean.salvar()}"
+                                         styleClass="button-modal" update="IndicadoresDataTable indicadorPanelGrid"
+                                         oncomplete="PF('indicadorDialogWidgetVar').hide()" process="descricaoDialog"  />
+
+                    </div>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+
+        <footer> Lista De Indicadores </footer>
+    </body>
 
 </html>

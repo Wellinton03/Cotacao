@@ -30,6 +30,13 @@ public class CotacoesService implements Serializable {
         return manager.find(Cotacoes.class, id);
     }
     
+    public List<Cotacoes> buscar(String description) {
+    TypedQuery<Cotacoes> query = manager.createQuery(
+            "SELECT c FROM Cotacoes c WHERE c.indicadores.description LIKE :description", Cotacoes.class);
+    query.setParameter("description", "%" + description + "%");
+    
+    return query.getResultList();
+}
 
     public List<Cotacoes> todasCotacoes() {
         return manager.createQuery("from Cotacoes ", Cotacoes.class).getResultList();

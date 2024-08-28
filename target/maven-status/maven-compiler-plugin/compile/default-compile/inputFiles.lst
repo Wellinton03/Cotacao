@@ -1,0 +1,12 @@
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\Components\CalendarJava8View.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\Components\CrudView.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\Controller\CotacoesControllerBean.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\Controller\IndicadoresControllerBean.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\Converter\IndicadoresConverter.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\entity\Cotacoes.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\entity\Indicadores.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\service\CotacoesService.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\service\IndicadoresService.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\util\EntityManagerProducer.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\util\Transacional.java
+C:\Users\Lenon\eclipse-workspace\Cotacao\src\main\java\util\TransacionalInterceptor.java

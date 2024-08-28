@@ -2,8 +2,8 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
-import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,60 +19,82 @@ import javax.persistence.TemporalType;
 @Table(name = "Cotacoes")
 public class Cotacoes implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_indicador")
-	private Indicadores indicadores;
-	
-	
-	public Indicadores getIndicadores() {
-		return indicadores;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public void setIndicadores(Indicadores indicadores) {
-		this.indicadores = indicadores;
-	}
+    @Column(name = "data_Hora")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataHora;
 
-	@Column(name = "data_Hora")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataHora;
+    @Column(name = "valor")
+    private String valor;
 
-	@Column(name = "valor")
-	private String valor;
+    @ManyToOne
+    @JoinColumn(name = "id_indicador")
+    private Indicadores indicadores;
 
-	public Long getId() {
-		return id;
-	}
+    public Indicadores getIndicadores() {
+        return indicadores;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setIndicadores(Indicadores indicadores) {
+        this.indicadores = indicadores;
+    }
 
-	public Date getDataHora() {
-		return dataHora;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setDataHora(Date dataHora) {
-		this.dataHora = dataHora;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getValor() {
-		return valor;
-	}
+    public Date getDataHora() {
+        return dataHora;
+    }
 
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
+    public void setDataHora(Date dataHora) {
+        this.dataHora = dataHora;
+    }
 
-	public String toString() {
-		return "Cotacoes {\n" + "  id=" + id + "\n" + "  dataHora='" + dataHora + "/n" + "\n" + "  valor='" + valor
-				+ '\'' + "\n" + "  idIndicador " + indicadores.getId()  + "  " + indicadores.getDescription();
+    public String getValor() {
+        return valor;
+    }
 
-	}
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
+
+    @Override
+    public String toString() {
+        return "Cotacoes {\n" + "  id=" + id + "\n" + "  dataHora='" + dataHora + "/n" + "\n" + "  valor='" + valor
+                + '\'' + "\n" + "  idIndicador " + indicadores.getId() + "  " + indicadores.getDescription();
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cotacoes other = (Cotacoes) obj;
+        return Objects.equals(this.id, other.id);
+    }
 
 }

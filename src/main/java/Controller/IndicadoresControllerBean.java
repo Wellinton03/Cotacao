@@ -3,13 +3,10 @@ package Controller;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.convert.Converter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import Converter.IndicadoresConverter;
-import entity.Cotacoes;
 import entity.Indicadores;
 import service.IndicadoresService;
 
