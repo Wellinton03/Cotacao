@@ -11,6 +11,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
 @Named
@@ -30,6 +31,15 @@ public class CotacoesService implements Serializable {
         return manager.find(Cotacoes.class, id);
     }
     
+    public List<IndicadorDTO> porIndicador() {
+        String jpql = "SELECT new DTO.IndicadorDTO(i.id, i.description) " +
+                       "FROM Indicadores i " +
+                       "JOIN Cotacoes c ON c.indicadores.id = i.id " +
+                       "GROUP BY i.id, i.description";
+        TypedQuery<IndicadorDTO> query = manager.createQuery(jpql, IndicadorDTO.class);
+        return query.getResultList();
+    }
+    
     public List<Cotacoes> buscar(String description) {
     TypedQuery<Cotacoes> query = manager.createQuery(
             "SELECT c FROM Cotacoes c WHERE c.indicadores.description LIKE :description", Cotacoes.class);
@@ -43,22 +53,16 @@ public class CotacoesService implements Serializable {
     }
 
     public void salvar(Cotacoes cotacoes) {
-    	System.out.println("chegou no service " + cotacoes);
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            System.out.println("Iniciando transação para salvar: " + cotacoes);
             if (cotacoes.getId() == null) {
                 manager.persist(cotacoes);
-                System.out.println("Cotação persistida com ID: " + cotacoes.getId());
             } else {
                 manager.merge(cotacoes);
-                System.out.println("Cotação mesclada com ID: " + cotacoes.getId());
             }
             tx.commit();
-            System.out.println("Transação commitada com sucesso");
         } catch (Exception e) {
-            System.out.println("Exceção durante transação, fazendo rollback");
             tx.rollback();
             e.printStackTrace();
             throw e;

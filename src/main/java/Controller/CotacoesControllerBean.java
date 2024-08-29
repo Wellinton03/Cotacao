@@ -3,10 +3,13 @@ package Controller;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
 import service.CotacoesService;
@@ -27,6 +30,7 @@ public class CotacoesControllerBean implements Serializable {
     
     private List<Cotacoes> listaCotacoes;
     private List<Indicadores> listaIndicadores;
+    private List<IndicadorDTO> listaFiltradaDeIndicadores; 
 
     @Inject
     private CotacoesService cotacoesService;
@@ -48,16 +52,21 @@ public class CotacoesControllerBean implements Serializable {
     public void pesquisa() {
         listaCotacoes = cotacoesService.buscar(termoPesquisa);
     }
+    
+    
 
     public void salvar() {
-        System.out.println("*** Iniciando Salvar!");
         if (selectedCotacao.getIndicadores() != null) {
-            System.out.println("verificou " + selectedCotacao);
             cotacoesService.salvar(selectedCotacao);
             listaCotacoes = cotacoesService.todasCotacoes();
-            System.out.println("chegou");
+            
+            selectedCotacao = null;
+            
+            FacesContext.getCurrentInstance().addMessage(null,
+ 	        		new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Cotação salva com sucesso!"));
         } else {
-            System.out.println("Indicador está nulo!");
+        	FacesContext.getCurrentInstance().addMessage(null,
+ 	        		new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha", "Cotação não foi salva"));
         }
     }
 
@@ -65,7 +74,19 @@ public class CotacoesControllerBean implements Serializable {
         if (selectedCotacao != null) {
             cotacoesService.excluir(selectedCotacao);
             listaCotacoes.remove(selectedCotacao);
+            
+            selectedCotacao = null;
+            
+            FacesContext.getCurrentInstance().addMessage(null,
+ 	        		new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Cotação excluída com sucesso!"));
+        }else {
+        	FacesContext.getCurrentInstance().addMessage(null,
+ 	        		new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha", "Cotação não foi excluída"));
         }
+    }
+    
+    public List<IndicadorDTO> getListaFiltradaDeIndicadores() {
+    	return listaFiltradaDeIndicadores;
     }
 
     public List<Indicadores> getListaIndicadores() {

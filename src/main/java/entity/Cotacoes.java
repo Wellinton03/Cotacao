@@ -30,7 +30,7 @@ public class Cotacoes implements Serializable {
     private Date dataHora;
 
     @Column(name = "valor")
-    private String valor;
+    private Double valor;
 
     @ManyToOne
     @JoinColumn(name = "id_indicador")
@@ -60,11 +60,11 @@ public class Cotacoes implements Serializable {
         this.dataHora = dataHora;
     }
 
-    public String getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 

@@ -41,27 +41,26 @@
                         </p:submenu>
                     </p:column>
                 </p:submenu>
-                <p:submenu label="Events" icon="pi pi-fw pi-calendar">
+                <p:submenu label="Gráfico" icon="pi pi-chart-line">
                     <p:column>
-                        <p:submenu label="Event 1">
-                            <p:menuitem value="Event 1.1" />
-                            <p:menuitem value="Event 1.2" />
+                        <p:submenu label="Gráfico de Cotações">
+                            <p:menuitem value="Análise de Cotações"  outcome="/GraficoDeCotacoes"/>
                         </p:submenu>
 
                     </p:column>
                 </p:submenu>
 
-                <p:submenu label="Settings" icon="pi pi-fw pi-cog">
+                <p:submenu label="Configurações" icon="pi pi-fw pi-cog">
                     <p:column>
-                        <p:submenu label="Setting 1">
-                            <p:menuitem value="Setting 1.1" />
-                            <p:menuitem value="Setting 1.2" />
+                        <p:submenu label="Úsuario">
+                            <p:menuitem value="Meus Dados"/>
+                            <p:menuitem value="Sair"/>
                         </p:submenu>
                     </p:column>
                 </p:submenu>
             </p:megaMenu>
             <p:growl id="messages" showDetail="true" />
-
+			<p:defaultCommand target="searchCommandButton" />
             <p:toolbar id="toolbar">
                 <p:toolbarGroup>
                     <p:commandButton 
@@ -71,9 +70,9 @@
                         styleClass="buttonAdd"
                         actionListener="#{indicadoresControllerBean.initNewIndicador()}"
                         oncomplete="PF('indicadorDialogWidgetVar').show()"
-                        update="descricaoDialog"
+                        update="indicadoresDialog"
                         process="@this">
-                        <p:resetInput target="descricaoDialog"/>
+                        <p:resetInput target="indicadoresDialog"/>
                     </p:commandButton>
 
                     <p:commandButton 
@@ -82,11 +81,10 @@
                         icon="pi pi-pencil" 
                         styleClass="buttonEdit" 
                         disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-                        actionListener="#{indicadoresControllerBean.salvar()}"
                         oncomplete="PF('indicadorDialogWidgetVar').show()" 
-                        update="descricaoDialog"
+                        update="indicadoresDialog"
                         process="@this">
-                        <p:resetInput target="descricaoDialog"/>
+                        <p:resetInput target="indicadoresDialog"/>
                     </p:commandButton>
 
                     <p:commandButton 
@@ -96,8 +94,9 @@
                         styleClass="buttonDelete" 
                         actionListener="#{indicadoresControllerBean.excluir()}"
                         disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-                        update="descricaoDialog toolbar IndicadoresDataTable"
-                        process="@this" />
+                        update="indicadoresDialog toolbar IndicadoresDataTable messages"
+                        process="@this"
+                         />
 
                 </p:toolbarGroup>
 
@@ -110,7 +109,7 @@
                             value="#{indicadoresControllerBean.termoPesquisa}" />
 
                         <p:commandButton 
-                            value="Pesquisar" 
+                            id="searchCommandButton" 
                             icon="pi pi-fw pi-search"
                             actionListener="#{indicadoresControllerBean.pesquisa()}" 
                             update="IndicadoresDataTable" />
@@ -144,16 +143,16 @@
                 </p:column>
 
             </p:dataTable>
-
+            
             <p:dialog 
                 header="Novo Indicador"
-                id="descricaoDialog"
+                id="indicadoresDialog"
                 widgetVar="indicadorDialogWidgetVar"
                 modal="true" 
                 resizable="false" 
                 closeOnEscape="true">
 
-                <p:defaultCommand target="saveCommandButton" scope="descricaoDialog"/>
+                <p:defaultCommand target="saveCommandButton" scope="indicadoresDialog"/>
 
                 <h:panelGrid 
                     columns="2" 
@@ -168,10 +167,14 @@
                         size="80" 
                         maxlength="120" />
                     <div>
-                        <p:commandButton id="saveCommandButton" value="Salvar"
-                                         actionListener="#{indicadoresControllerBean.salvar()}"
-                                         styleClass="button-modal" update="IndicadoresDataTable indicadorPanelGrid"
-                                         oncomplete="PF('indicadorDialogWidgetVar').hide()" process="descricaoDialog"  />
+                        <p:commandButton 
+                        id="saveCommandButton" 
+                        value="Salvar"
+						actionListener="#{indicadoresControllerBean.salvar()}"
+                        styleClass="button-modal" 
+	                    update="IndicadoresDataTable indicadorPanelGrid messages toolbar"
+						oncomplete="PF('indicadorDialogWidgetVar').hide()" 
+						process="indicadoresDialog"  />
 
                     </div>
                 </h:panelGrid>

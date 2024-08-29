@@ -3,6 +3,8 @@ package Controller;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,23 +42,33 @@ public class IndicadoresControllerBean implements Serializable {
  	}
 
  	public void salvar() {
- 	    System.out.println("selectedIndicador: " + selectedIndicador);
  	    if (selectedIndicador != null) {
- 	        System.out.println("selectedIndicador não é nulo");
  	        indicadorService.salvar(selectedIndicador);
  	        listaIndicadores = indicadorService.todosIndicadores();
+ 	        
+ 	        selectedIndicador = null;
+ 	        
+ 	        FacesContext.getCurrentInstance().addMessage(null,
+ 	        		new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Indicador salvo com sucesso!"));
  	    } else {
- 	        System.out.println("selectedIndicador é nulo");
+ 	    	FacesContext.getCurrentInstance().addMessage(null,
+	                new FacesMessage(FacesMessage.SEVERITY_INFO, "Falha", "Indicador não foi salvo"));
  	    }
  	}
 
 	public void excluir() {
-		System.out.println("excluir " + selectedIndicador);
 		if (selectedIndicador != null) {
 			indicadorService.excluir(selectedIndicador);
 			selectedIndicador = null;
-			
 			listaIndicadores = indicadorService.todosIndicadores();
+			
+			selectedIndicador = null;
+			
+			 FacesContext.getCurrentInstance().addMessage(null,
+		                new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Indicador excluído com sucesso!"));
+		}else {
+			 FacesContext.getCurrentInstance().addMessage(null,
+		                new FacesMessage(FacesMessage.SEVERITY_INFO, "Falha", "Indicador não foi excluído"));
 		}
 	}
 	
@@ -77,7 +89,6 @@ public class IndicadoresControllerBean implements Serializable {
 	}
 	
 	public boolean isIndicadorSeleciona() {
-		System.out.println(selectedIndicador);
 		return selectedIndicador != null && selectedIndicador.getId() != null;
 	}
 	

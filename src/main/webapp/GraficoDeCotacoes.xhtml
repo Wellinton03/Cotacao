@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta charset="UTF-8" />
+        <title>Gráfico de Cotações</title>
+
+        <f:metadata>
+            <f:viewAction action="#{cotacoesControllerBean.todosIndicadores()}" />
+        </f:metadata>
+        <h:outputStylesheet library="Listas" name="estilo.css" />
+    </h:head>
+
+    <body>
+
+        <header>
+            <h:graphicImage library="Listas" name="logo.png" />
+        </header>
+        <h:form id="form">
+			<h:panelGroup>
+				<p:selectOneMenu 
+					id="chart" 
+					value="#{cotacoesControllerBean.selectedCotacao}">
+					<f:selectItem 
+						itemLabel="Selecione..." 
+						itemValue="${null}"  
+						noSelectionOption="true"/>
+					<f:selectItems 
+						var="indicador" 
+						value="#{cotacoesControllerBean.listaFiltradaDeIndicadores}"
+						itemLabel="${indicador.description}" itemValue="${indicador}"/>
+				</p:selectOneMenu>
+				
+			</h:panelGroup>
+        </h:form>
+
+        <footer> Gráfico de Cotações </footer>
+    </body>
+
+</html>
