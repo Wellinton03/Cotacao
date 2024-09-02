@@ -1,7 +1,13 @@
 package Controller;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -9,11 +15,18 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import DTO.FiltroDTO;
 import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
 import service.CotacoesService;
 import service.IndicadoresService;
+
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+
 
 @Named
 @ViewScoped
@@ -28,9 +41,17 @@ public class CotacoesControllerBean implements Serializable {
 
     private String termoPesquisa;
     
+    private String selectedFilter;
+    private Date dataInicial;
+    private Date dataFinal;
+    private Long idIndicadores;
+    
+    private BarChartModel barChartModel;
+    
     private List<Cotacoes> listaCotacoes;
     private List<Indicadores> listaIndicadores;
-    private List<IndicadorDTO> listaFiltradaDeIndicadores; 
+    private List<IndicadorDTO> indicadoresFiltrados;
+    private List<FiltroDTO> cotacoesFiltradas;
 
     @Inject
     private CotacoesService cotacoesService;
@@ -39,6 +60,13 @@ public class CotacoesControllerBean implements Serializable {
         selectedCotacao = new Cotacoes();
         selectedCotacao.setIndicadores(new Indicadores());
         listaIndicadores = indicadorService.todosIndicadores();
+    }
+    
+    public void initNewFiltro() {
+    	selectedFilter = null;
+    	dataInicial = null;
+    	dataFinal = null;
+    	idIndicadores = null;
     }
 
     public void todosIndicadores() {
@@ -52,8 +80,6 @@ public class CotacoesControllerBean implements Serializable {
     public void pesquisa() {
         listaCotacoes = cotacoesService.buscar(termoPesquisa);
     }
-    
-    
 
     public void salvar() {
         if (selectedCotacao.getIndicadores() != null) {
@@ -85,8 +111,20 @@ public class CotacoesControllerBean implements Serializable {
         }
     }
     
-    public List<IndicadorDTO> getListaFiltradaDeIndicadores() {
-    	return listaFiltradaDeIndicadores;
+    public List<IndicadorDTO> getListaIndicadoresFiltrados() {
+    	if (indicadoresFiltrados == null) {
+    		indicadoresFiltrados = cotacoesService.porIndicador();
+    	}
+    	
+    	
+    	return indicadoresFiltrados;
+    }
+    
+    public List<FiltroDTO> getListaCotacoesFiltradas() {
+    	if(cotacoesFiltradas == null) {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+    }
+    	return cotacoesFiltradas;
     }
 
     public List<Indicadores> getListaIndicadores() {
@@ -124,4 +162,167 @@ public class CotacoesControllerBean implements Serializable {
     }
     
     
+    public String getSelectedFilter() {
+		return selectedFilter;
+	}
+
+	public void setSelectedFilter(String selectedFilter) {
+		this.selectedFilter = selectedFilter;
+	}
+
+	public Date getDataInicial() {
+		return dataInicial;
+	}
+
+	public void setDataInicial(Date dataInicial) {
+		this.dataInicial = dataInicial;
+	}
+
+	public Date getDataFinal() {
+		return dataFinal;
+	}
+
+	public void setDataFinal(Date dataFinal) {
+		this.dataFinal = dataFinal;
+	}
+	
+	
+
+	public Long getIdIndicadores() {
+		return idIndicadores;
+	}
+
+	public void setIdIndicadores(Long idIndicadores) {
+		this.idIndicadores = idIndicadores;
+	}
+
+	public void aplicarFiltro() {
+    	switch (selectedFilter) {
+    	case "1":
+    		filtro1Dia();
+    			break;
+    	case "3":
+    		filtro3Dias();
+    			break;
+    	case "5":
+    		filtro5Dias();
+    			break;
+    	case "10":
+    		filtro10Dias();
+    			break;
+    	case "15":
+    		filtro15Dias();
+    			break;
+    	case "30":
+    		filtro30Dias();
+    			break;
+    	case "custom":
+    		filtroCustom();
+    		 break;
+    	default:
+    			FacesContext.getCurrentInstance().addMessage(null, 
+    					new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Selecione um filtro válido. "));
+    	}
+    	createBarModel();
+    }
+    	    
+    
+    public void filtro1Dia() {
+    	System.out.println("Data Inicial: " + dataInicial);
+    	System.out.println("Data Final: " + dataFinal);
+    	System.out.println("ID Indicadores: " + idIndicadores);
+    	cotacoesFiltradas =  cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 1), new Date(), idIndicadores );
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public void filtro3Dias() {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 3), new Date(), idIndicadores );
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public void filtro5Dias() {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 5), new Date(), idIndicadores);
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public void filtro10Dias() {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 10), new Date(), idIndicadores);
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    
+    public void filtro15Dias() {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 15), new Date(), idIndicadores);
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public void filtro30Dias() {
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 30), new Date(), idIndicadores);
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public void filtroCustom() {
+    	System.out.println("Data Inicial: " + dataInicial);
+    	System.out.println("Data Final: " + dataFinal);
+    	System.out.println("ID Indicadores: " + idIndicadores);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+    	System.out.println(cotacoesFiltradas);
+    }
+    
+    public static Date getDataAnterior(Date dataBase, int dias) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dataBase);
+        System.out.println(dataBase);
+        calendar.add(Calendar.DAY_OF_MONTH, -dias);
+        System.out.println(calendar.getTime());
+        return calendar.getTime();
+    }
+    
+    public BarChartModel getBarChartModel() {
+        if (barChartModel == null) {
+            createBarModel();
+        }
+        return barChartModel;
+    }
+    
+    private void createBarModel() {
+        if (cotacoesFiltradas == null) {
+            cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+        }
+        barChartModel = new BarChartModel();
+
+        ChartSeries cotacoesSeries = new ChartSeries();
+        cotacoesSeries.setLabel("Cotações");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+        for (FiltroDTO cotacao : cotacoesFiltradas) {
+            String formattedDate = dateFormat.format(cotacao.getDataHora());
+            String formattedValue = currencyFormat.format(cotacao.getValor()); 
+            cotacoesSeries.set(formattedDate, cotacao.getValor()); 
+            System.out.println("data " + formattedDate + " Valor " + formattedValue);
+        }
+
+        barChartModel.addSeries(cotacoesSeries);
+
+        barChartModel.setTitle("Gráfico de Cotações");
+        barChartModel.setLegendPosition("ne");
+        barChartModel.setAnimate(true);
+        barChartModel.setShowDatatip(true);
+        barChartModel.setExtender("customizeDatatip");
+
+        Axis xAxis = barChartModel.getAxis(AxisType.X);
+        xAxis.setLabel("Data");
+        xAxis.setTickAngle(-45); 
+        xAxis.setTickInterval("1");
+
+        Axis yAxis = barChartModel.getAxis(AxisType.Y);
+        yAxis.setLabel("Valor");
+        yAxis.setMin(0);
+    }
+
+
 }
+    
+

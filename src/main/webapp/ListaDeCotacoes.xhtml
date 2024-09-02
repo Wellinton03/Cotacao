@@ -184,7 +184,7 @@
                         required="true">
                         <f:selectItem itemLabel="Selecione..."
                                       noSelectionOption="true"
-                                      itemValue="#{cotacoesControllerBean.selectedCotacao.indicadores}"
+                                      itemValue="#{null}"
                                       itemDisabled="#{not empty cotacoesControllerBean.selectedCotacao.indicadores}"/>
                         <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador"
                                        itemLabel="#{indicador.description}" itemValue="#{indicador}"/>

@@ -1,6 +1,7 @@
 package service;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,9 +12,9 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import DTO.FiltroDTO;
 import DTO.IndicadorDTO;
 import entity.Cotacoes;
-import entity.Indicadores;
 @Named
 @ApplicationScoped
 public class CotacoesService implements Serializable {
@@ -31,14 +32,7 @@ public class CotacoesService implements Serializable {
         return manager.find(Cotacoes.class, id);
     }
     
-    public List<IndicadorDTO> porIndicador() {
-        String jpql = "SELECT new DTO.IndicadorDTO(i.id, i.description) " +
-                       "FROM Indicadores i " +
-                       "JOIN Cotacoes c ON c.indicadores.id = i.id " +
-                       "GROUP BY i.id, i.description";
-        TypedQuery<IndicadorDTO> query = manager.createQuery(jpql, IndicadorDTO.class);
-        return query.getResultList();
-    }
+   
     
     public List<Cotacoes> buscar(String description) {
     TypedQuery<Cotacoes> query = manager.createQuery(
@@ -81,5 +75,25 @@ public class CotacoesService implements Serializable {
             e.printStackTrace();
             throw e;
         }
+    }
+    
+    public List<IndicadorDTO> porIndicador() {
+        String jpql = "SELECT new DTO.IndicadorDTO(i.id, i.description) " +
+                       "FROM Indicadores i " +
+                       "JOIN Cotacoes c ON c.indicadores.id = i.id " +
+                       "GROUP BY i.id, i.description";
+        TypedQuery<IndicadorDTO> query = manager.createQuery(jpql, IndicadorDTO.class);
+        return query.getResultList();
+    }
+    
+    public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long idIndicadores) {
+        String jpql = "SELECT new DTO.FiltroDTO(c.dataHora, c.valor) " +
+                      "FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicial AND :dataFinal " +
+                      "AND c.indicadores.id = :idIndicadores";
+        return manager.createQuery(jpql, FiltroDTO.class)
+                      .setParameter("dataInicial", dataInicial)
+                      .setParameter("dataFinal", dataFinal)
+                      .setParameter("idIndicadores", idIndicadores)
+                      .getResultList();
     }
 }
