@@ -19,74 +19,44 @@
 	<div id="conteudo">
 		<h:form>
 
-			<p:megaMenu orientation="horizontal" autoDisplay="false">
-				<f:facet name="start">
-					<p:graphicImage name="images/primefaces-logo.svg"
-						library="showcase" width="150" />
-				</f:facet>
-				<p:submenu label="Tabelas" icon="pi pi-database">
-					<p:column>
-						<p:submenu label="Indicadores">
-							<p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores" />
-						</p:submenu>
-						<p:submenu label="Cotações">
-							<p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
-						</p:submenu>
-					</p:column>
+			<p:megaMenu orientation="horizontal" autoDisplay="false"
+                        styleClass="Menu">
+                <f:facet name="start">
+                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase"
+                                    width="150" />
+                </f:facet>
+                <p:menuitem value="Quit" icon="pi pi-home"
+                            outcome="/CadastroDeIndicadores" />
+                <p:divider layout="vertical" />
+                <p:submenu label="Tabelas" icon="pi pi-database">
+                    <p:column>
+                        <p:submenu label="Indicadores">
+                            <p:menuitem value="Lista de Indicadores"
+                                        outcome="/ListaDeIndicadores" />
+                        </p:submenu>
+                        <p:submenu label="Cotações">
+                            <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:submenu label="Gráfico" icon="pi pi-chart-line">
+                    <p:column>
+                        <p:submenu label="Gráfico de Cotações">
+                            <p:menuitem value="Análise de Cotações"  outcome="/GraficoDeCotacoes"/>
+                        </p:submenu>
 
+                    </p:column>
+                </p:submenu>
 
-				</p:submenu>
-
-
-
-				<p:submenu label="Events" icon="pi pi-fw pi-calendar">
-					<p:column>
-						<p:submenu label="Event 1">
-							<p:menuitem value="Event 1.1" />
-							<p:menuitem value="Event 1.2" />
-						</p:submenu>
-						<p:submenu label="Event 2">
-							<p:menuitem value="Event 2.1" />
-							<p:menuitem value="Event 2.2" />
-						</p:submenu>
-					</p:column>
-
-					<p:column>
-						<p:submenu label="Event 3">
-							<p:menuitem value="Event 3.1" />
-							<p:menuitem value="Event 3.2" />
-						</p:submenu>
-						<p:submenu label="Event 4">
-							<p:menuitem value="Event 4.1" />
-							<p:menuitem value="Event 4.2" />
-						</p:submenu>
-					</p:column>
-				</p:submenu>
-
-				<p:submenu label="Settings" icon="pi pi-fw pi-cog">
-					<p:column>
-						<p:submenu label="Setting 1">
-							<p:menuitem value="Setting 1.1" />
-							<p:menuitem value="Setting 1.2" />
-						</p:submenu>
-						<p:submenu label="Setting 2">
-							<p:menuitem value="Setting 2.1" />
-							<p:menuitem value="Setting 2.2" />
-						</p:submenu>
-						<p:submenu label="Setting 3">
-							<p:menuitem value="Setting 3.1" />
-							<p:menuitem value="Setting 3.2" />
-						</p:submenu>
-					</p:column>
-
-					<p:column>
-						<p:submenu label="Setting 4">
-							<p:menuitem value="Setting 4.1" />
-							<p:menuitem value="Setting 4.2" />
-						</p:submenu>
-					</p:column>
-				</p:submenu>
-			</p:megaMenu>
+                <p:submenu label="Configurações" icon="pi pi-fw pi-cog">
+                    <p:column>
+                        <p:submenu label="Úsuario">
+                            <p:menuitem value="Meus Dados"/>
+                            <p:menuitem value="Sair"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+            </p:megaMenu>
 		</h:form>
 	</div>
 

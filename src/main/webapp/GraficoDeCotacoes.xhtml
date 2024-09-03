@@ -7,7 +7,6 @@
     <h:head>
         <meta charset="UTF-8" />
         <title>Gráfico de Cotações</title>
-
         <f:metadata>
             <f:viewAction action="#{cotacoesControllerBean.todosIndicadores()}" />
         </f:metadata>
@@ -15,163 +14,132 @@
     </h:head>
 
     <body>
-
         <header>
             <h:graphicImage library="Listas" name="logo.png" />
         </header>
+
         <h:form id="form">
-        
-        
-        	<p:megaMenu orientation="horizontal" autoDisplay="false"
-                        styleClass="Menu">
+            <p:megaMenu orientation="horizontal" autoDisplay="false" styleClass="Menu">
                 <f:facet name="start">
-                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase"
-                                    width="150" />
+                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase" width="150" />
                 </f:facet>
-                <p:menuitem value="Quit" icon="pi pi-home"
-                            outcome="/CadastroDeIndicadores" />
+                <p:menuitem value="Quit" icon="pi pi-home" outcome="/CadastroDeIndicadores" />
                 <p:divider layout="vertical" />
                 <p:submenu label="Tabelas" icon="pi pi-database">
-                    <p:column>
-                        <p:submenu label="Indicadores">
-                            <p:menuitem value="Lista de Indicadores"
-                                        outcome="/ListaDeIndicadores" />
-                        </p:submenu>
-                        <p:submenu label="Cotações">
-                            <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
-                        </p:submenu>
-                    </p:column>
+                    <p:submenu label="Indicadores">
+                        <p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores" />
+                    </p:submenu>
+                    <p:submenu label="Cotações">
+                        <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
+                    </p:submenu>
                 </p:submenu>
                 <p:submenu label="Gráfico" icon="pi pi-chart-line">
-                    <p:column>
-                        <p:submenu label="Gráfico de Cotações">
-                            <p:menuitem value="Análise de Cotações"  outcome="/GraficoDeCotacoes"/>
-                        </p:submenu>
-
-                    </p:column>
+                    <p:submenu label="Gráfico de Cotações">
+                        <p:menuitem value="Análise de Cotações" outcome="/GraficoDeCotacoes"/>
+                    </p:submenu>
                 </p:submenu>
-
                 <p:submenu label="Configurações" icon="pi pi-fw pi-cog">
-                    <p:column>
-                        <p:submenu label="Úsuario">
-                            <p:menuitem value="Meus Dados"/>
-                            <p:menuitem value="Sair"/>
-                        </p:submenu>
-                    </p:column>
+                    <p:submenu label="Usuário">
+                        <p:menuitem value="Meus Dados"/>
+                        <p:menuitem value="Sair"/>
+                    </p:submenu>
                 </p:submenu>
             </p:megaMenu>
-            
-        <p:toolbar>
-        	<p:toolbarGroup>
-        		<p:commandButton 
-        			title="Novo Filtro"
-                    value="Novo Filtro"
-					icon="pi pi-plus"
-                    styleClass="buttonAdd"
-                    actionListener="#{cotacoesControllerBean.initNewFiltro()}"
-                    oncomplete="PF('filtroWidgetVar').show()"
-                    update="filtroDialog"
-                    process="@this">
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton 
+                        title="Novo Filtro"
+                        value="Novo Filtro"
+                        icon="pi pi-plus"
+                        styleClass="buttonAdd"
+                        actionListener="#{cotacoesControllerBean.initNewFiltro()}"
+                        oncomplete="PF('filtroWidgetVar').show()"
+                        update="filtroDialog"
+                        process="@this">
                         <p:resetInput target="filtroDialog"/>
                     </p:commandButton>
-        	</p:toolbarGroup>
-        </p:toolbar>
-        
-			<p:dialog 
-    header="Novo Filtro"
-    id="filtroDialog"
-    widgetVar="filtroWidgetVar"
-    closeOnEscape="true"
-    resizable="false"
-    modal="true">
-    
-    <p:panelGrid columns="2"
-                 columnClasses="label-col, input-col"
-                 id="filtroPanelGrid"
-                 styleClass="modal-grid">
-                 
-        <h:outputLabel value="Indicador: " for="indicadores" />
-        <p:selectOneMenu 
-            id="indicadores" 
-            value="#{cotacoesControllerBean.idIndicadores}">
-            
-            <f:selectItem 
-                itemLabel="Selecione..." 
-                itemValue=""  
-                noSelectionOption="true"
-                required="true"/>
+                </p:toolbarGroup>
+                <p:toolbarGroup>
+                    <p:commandButton 
+                        title="Filtro API"
+                        value="Filtro API"
+                        icon="pi pi-plus"
+                        styleClass="buttonAdd"
+                        actionListener="#{cotacoesControllerBean.initNewFiltroAPI()}"
+                        oncomplete="PF('filtroAPIWidgetVar').show()"
+                        update="filtroAPIDialog"
+                        process="@this">
+                        <p:resetInput target="filtroAPIDialog"/>
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dialog 
+                header="Novo Filtro"
+                id="filtroDialog"
+                widgetVar="filtroWidgetVar"
+                closeOnEscape="true"
+                resizable="false"
+                modal="true">
+                <p:panelGrid columns="2" columnClasses="label-col, input-col" styleClass="modal-grid">
+                    <h:outputLabel value="Indicador: " for="indicadores" />
+                    <p:selectOneMenu required="true" id="indicadores" value="#{cotacoesControllerBean.idIndicadores}">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
+                        <f:selectItems  value="#{cotacoesControllerBean.listaIndicadoresFiltrados}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
+                    </p:selectOneMenu>
+                    <h:outputLabel value="Filtro: " for="filtro" />
+                    <p:selectOneMenu required="true" id="filtro" value="#{cotacoesControllerBean.selectedFilter}">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" required="true"/>
+                        <f:selectItem itemLabel="1 Dia - 24Hrs" itemValue="1" />
+                        <f:selectItem itemLabel="3 Dias - 48Hrs" itemValue="3" />
+                        <f:selectItem itemLabel="5 Dias - 120Hrs" itemValue="5" />
+                        <f:selectItem itemLabel="10 Dias - 240Hrs" itemValue="10" />
+                        <f:selectItem itemLabel="15 Dias - 360Hrs" itemValue="15" />
+                        <f:selectItem itemLabel="30 Dias - 720Hrs" itemValue="30" />
+                        <f:selectItem itemLabel="Personalizado" itemValue="custom" />
+                        <p:ajax update="dataInicial dataFinal" process="@this" />
+                    </p:selectOneMenu>
+                    <h:outputLabel for="dataInicial" value="Data Inicial: " />
+                    <p:datePicker id="dataInicial" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataInicial}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    <h:outputLabel for="dataFinal" value="Data Final: "/>
+                    <p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    <p:commandButton value="Filtrar" update="form chartCotacoes" action="#{cotacoesControllerBean.aplicarFiltro()}" oncomplete="PF('filtroWidgetVar').hide()" />
+                </p:panelGrid>
+            </p:dialog>
+
+            <p:dialog 
+                header="Novo Filtro - (API)"
+                id="filtroAPIDialog"
+                widgetVar="filtroAPIWidgetVar"
+                closeOnEscape="true"
+                resizable="false"
+                modal="true">
+                <p:panelGrid 
+                	columns="2" 
+                	columnClasses="label-col, input-col" 
+                	styleClass="modal-grid">
                 
-            <f:selectItems 
-                value="#{cotacoesControllerBean.listaIndicadoresFiltrados}"
-                var="indicador" 
-                itemLabel="#{indicador.description}" 
-                itemValue="#{indicador.id}"/>
-                
-        </p:selectOneMenu>
-    
-        <h:outputLabel value="Filtro: " for="filtro" />
-        <p:selectOneMenu id="filtro" value="#{cotacoesControllerBean.selectedFilter}">
-            <f:selectItem 
-                itemLabel="Selecione..." 
-                itemValue="#{null}" 
-                noSelectionOption="true"
-                required="true"/>
-            <f:selectItem itemLabel="1 Dia - 24Hrs" itemValue="1" />
-            <f:selectItem itemLabel="3 Dias - 48Hrs" itemValue="3" />
-            <f:selectItem itemLabel="5 Dias - 120Hrs" itemValue="5" />
-            <f:selectItem itemLabel="10 Dias - 240Hrs" itemValue="10" />
-            <f:selectItem itemLabel="15 Dias - 360Hrs" itemValue="15" />
-            <f:selectItem itemLabel="30 Dias - 720Hrs" itemValue="30" />
-            <f:selectItem itemLabel="Personalizado" itemValue="custom" />
-            
-            
-            <p:ajax update="dataInicial dataFinal" process="@this" />
-        </p:selectOneMenu>
-        
-    		<h:outputLabel for="dataInicial" value="Data Inicial: " />
-    		<p:datePicker id="dataInicial" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataInicial}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    <h:outputLabel value="Indicador: " for="indicadoresAPI" />
+                    <p:selectOneMenu id="indicadoresAPI" value="#{cotacoesControllerBean.selectedCurrency}" required="true">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{cotacoesControllerBean.availableCurrencys}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel for="dataInicialAPI" value="Data Inicial: " />
+                    <p:datePicker id="dataInicialAPI" value="#{cotacoesControllerBean.startDate}" />
+                    
+                    <h:outputLabel for="dataFinalAPI" value="Data Final: "/>
+                    <p:datePicker id="dataFinalAPI" value="#{cotacoesControllerBean.endDate}"/>
+                    
+                    <p:commandButton value="Filtrar" update="form chartCotacoes" action="#{cotacoesControllerBean.resultExchangeRates()}" oncomplete="PF('filtroAPIWidgetVar').hide()" />
+                </p:panelGrid>
+            </p:dialog>
 
-    		<h:outputLabel for="dataFinal" value="Data Final: "/>
-    		<p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
-        
-        <p:commandButton 
-            value="Filtrar" 
-            update="form chartCotacoes"
-            action="#{cotacoesControllerBean.aplicarFiltro()}"
-            oncomplete="PF('filtroWidgetVar').hide()" />
-        
-    </p:panelGrid>
-</p:dialog>
-			
-			<p:chart 
-				type="bar" 
-				model="#{cotacoesControllerBean.barChartModel}" 
-				id="chartCotacoes"
-				extender="customizeDatatip"/>
-				<h:outputScript>
-    function customizeDatatip() {
-        this.cfg.datatipFormatFunction = function(value) {
-            return 'R$ ' + value.y.toLocaleString('pt-BR', {
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2
-            });
-        };
+            <p:chart type="bar" model="#{cotacoesControllerBean.barChartModel}" id="chartCotacoes" />
 
-        this.cfg.axes.yaxis.tickOptions = {
-            formatString: 'R$ %.2f'
-        };
-
-        this.cfg.seriesDefaults = {
-            rendererOptions: {
-                highlightMouseOver: true,
-                highlightMouseDown: true
-            }
-        };
-    }
-</h:outputScript>
         </h:form>
 
-        <footer> Gráfico de Cotações </footer>
+        <footer>Gráfico de Cotações</footer>
     </body>
-
 </html>
