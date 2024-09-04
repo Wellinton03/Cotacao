@@ -1,42 +1,77 @@
 package response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class APIResponse {
 
-    @JsonProperty("date")
-    private Date date;
+    @JsonProperty("code")
+    private String codMoeda;
+
+    @JsonProperty("codein")
+    private String codMoedaConversion;
+
+    @JsonProperty("name")
+    private String nomeMoeda;
 
     @JsonProperty("high")
-    private Double high;
+    private Double alta;
 
     @JsonProperty("low")
-    private Double low;
+    private Double baixa;
 
-    public Date getDate() {
-        return date;
+    @JsonProperty("create_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date dataEHora;
+
+    public String getCodMoeda() {
+        return codMoeda;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCodMoeda(String codMoeda) {
+        this.codMoeda = codMoeda;
     }
 
-    public Double getHigh() {
-        return high;
+    public String getCodMoedaConversion() {
+        return codMoedaConversion;
     }
 
-    public void setHigh(Double high) {
-        this.high = high;
+    public void setCodMoedaConversion(String codMoedaConversion) {
+        this.codMoedaConversion = codMoedaConversion;
     }
 
-    public Double getLow() {
-        return low;
+    public String getNomeMoeda() {
+        return nomeMoeda;
     }
 
-    public void setLow(Double low) {
-        this.low = low;
+    public void setNomeMoeda(String nomeMoeda) {
+        this.nomeMoeda = nomeMoeda;
+    }
+
+    public Double getAlta() {
+        return alta;
+    }
+
+    public void setAlta(Double alta) {
+        this.alta = alta;
+    }
+
+    public Double getBaixa() {
+        return baixa;
+    }
+
+    public void setBaixa(Double baixa) {
+        this.baixa = baixa;
+    }
+
+    public Date getDataEHora() {
+        return dataEHora;
+    }
+
+    public void setDataEHora(Date dataEHora) {
+        this.dataEHora = dataEHora;
     }
 }
-
-

@@ -60,19 +60,6 @@
                         <p:resetInput target="filtroDialog"/>
                     </p:commandButton>
                 </p:toolbarGroup>
-                <p:toolbarGroup>
-                    <p:commandButton 
-                        title="Filtro API"
-                        value="Filtro API"
-                        icon="pi pi-plus"
-                        styleClass="buttonAdd"
-                        actionListener="#{cotacoesControllerBean.initNewFiltroAPI()}"
-                        oncomplete="PF('filtroAPIWidgetVar').show()"
-                        update="filtroAPIDialog"
-                        process="@this">
-                        <p:resetInput target="filtroAPIDialog"/>
-                    </p:commandButton>
-                </p:toolbarGroup>
             </p:toolbar>
 
             <p:dialog 
@@ -105,34 +92,6 @@
                     <h:outputLabel for="dataFinal" value="Data Final: "/>
                     <p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
                     <p:commandButton value="Filtrar" update="form chartCotacoes" action="#{cotacoesControllerBean.aplicarFiltro()}" oncomplete="PF('filtroWidgetVar').hide()" />
-                </p:panelGrid>
-            </p:dialog>
-
-            <p:dialog 
-                header="Novo Filtro - (API)"
-                id="filtroAPIDialog"
-                widgetVar="filtroAPIWidgetVar"
-                closeOnEscape="true"
-                resizable="false"
-                modal="true">
-                <p:panelGrid 
-                	columns="2" 
-                	columnClasses="label-col, input-col" 
-                	styleClass="modal-grid">
-                
-                    <h:outputLabel value="Indicador: " for="indicadoresAPI" />
-                    <p:selectOneMenu id="indicadoresAPI" value="#{cotacoesControllerBean.selectedCurrency}" required="true">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{cotacoesControllerBean.availableCurrencys}" />
-                    </p:selectOneMenu>
-                    
-                    <h:outputLabel for="dataInicialAPI" value="Data Inicial: " />
-                    <p:datePicker id="dataInicialAPI" value="#{cotacoesControllerBean.startDate}" />
-                    
-                    <h:outputLabel for="dataFinalAPI" value="Data Final: "/>
-                    <p:datePicker id="dataFinalAPI" value="#{cotacoesControllerBean.endDate}"/>
-                    
-                    <p:commandButton value="Filtrar" update="form chartCotacoes" action="#{cotacoesControllerBean.resultExchangeRates()}" oncomplete="PF('filtroAPIWidgetVar').hide()" />
                 </p:panelGrid>
             </p:dialog>
 

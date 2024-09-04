@@ -1,7 +1,6 @@
 package Controller;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,9 +18,7 @@ import DTO.FiltroDTO;
 import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
-import response.APIResponse;
 import service.CotacoesService;
-import service.CurrencyService;
 import service.IndicadoresService;
 
 import org.primefaces.model.chart.BarChartModel;
@@ -42,15 +39,6 @@ public class CotacoesControllerBean implements Serializable {
     @Inject
     private IndicadoresService indicadorService;
     
-    private CurrencyService currencyService;
-    
-    private CurrencyService getService() {
-    	if(currencyService == null) {
-    		currencyService = new CurrencyService();
-    	}
-    	return currencyService;
-    }
-
     private Cotacoes selectedCotacao;
 
     private String termoPesquisa;
@@ -66,12 +54,6 @@ public class CotacoesControllerBean implements Serializable {
     private List<Indicadores> listaIndicadores;
     private List<IndicadorDTO> indicadoresFiltrados;
     private List<FiltroDTO> cotacoesFiltradas;
-    private List<String> availableCurrencies;
-    private List<APIResponse> exchangeRateData;
-    
-    private String selectedCurrency;
-    private String startDate;
-    private String endDate;
 
     public void initNewCotacao() {
         selectedCotacao = new Cotacoes();
@@ -86,22 +68,9 @@ public class CotacoesControllerBean implements Serializable {
     	idIndicadores = null;
     }
     
-    public void resultExchangeRates() {
-        System.out.println("chegou");
-        if (selectedCurrency != null && startDate != null && endDate != null) {
-            List<APIResponse> exchangeRateData = getService().getExchangeRates(selectedCurrency, startDate, endDate);
-            System.out.println("Dados retornados: " + exchangeRateData);
-            atualizarGraficoAPICotacoes(exchangeRateData);
-        } else {
-            System.out.println("Parâmetros inválidos - selectedCurrency: " + selectedCurrency + ", startDate: " + startDate + ", endDate: " + endDate);
-        }
-    }
+   
     
-    public void initNewFiltroAPI() {
-        selectedCurrency = null;
-        startDate = null;
-        endDate = null;
-    }
+    
     public void todosIndicadores() {
         listaIndicadores = indicadorService.todosIndicadores();
     }
@@ -175,14 +144,6 @@ public class CotacoesControllerBean implements Serializable {
         return listaCotacoes;
     }
     
-    public List<String> getAvailableCurrencys() {
-    	if (availableCurrencies == null) {
-    		availableCurrencies = getService().getAvailableCurrencies();
-    		System.out.println(availableCurrencies);
-    	}
-    	return availableCurrencies;
-    }
-
     public void aplicarFiltro() {
         switch (selectedFilter) {
             case "1":
@@ -210,7 +171,7 @@ public class CotacoesControllerBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Selecione um filtro válido."));
         }
-        atualizarGraficoBancoDados();
+        createBarModel();
     }
     
     
@@ -252,25 +213,33 @@ public class CotacoesControllerBean implements Serializable {
     	return calendar.getTime();
     }
     
-    private void atualizarGraficoBancoDados() {
+    public BarChartModel getBarChartModel() {
+    	if (barChartModel == null) {
+    		createBarModel();
+    	}
+    	return barChartModel;
+    }
+    
+    private void createBarModel() {
+        if (cotacoesFiltradas == null) {
+            cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+        }
         barChartModel = new BarChartModel();
+
         ChartSeries cotacoesSeries = new ChartSeries();
         cotacoesSeries.setLabel("Cotações");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         for (FiltroDTO cotacao : cotacoesFiltradas) {
-            String formattedDate = dateFormat.format(cotacao.getDataHora());
+        	String formattedDate = dateFormat.format(cotacao.getDataHora());
             Double value = cotacao.getValor();
             String label = formattedDate + " - R$ " + String.format("%.2f", value);
             cotacoesSeries.set(label, value);
         }
 
         barChartModel.addSeries(cotacoesSeries);
-        configurarGrafico();
-    }
 
-    private void configurarGrafico() {
         barChartModel.setTitle("Gráfico de Cotações");
         barChartModel.setLegendPosition("ne");
         barChartModel.setAnimate(true);
@@ -278,67 +247,13 @@ public class CotacoesControllerBean implements Serializable {
 
         Axis xAxis = barChartModel.getAxis(AxisType.X);
         xAxis.setLabel("Data e Valor");
-        xAxis.setTickAngle(-35);
+        xAxis.setTickAngle(-45);
         xAxis.setTickInterval("1");
 
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
         yAxis.setLabel("Valor");
         yAxis.setMin(0);
     }
-
-    private void atualizarGraficoAPICotacoes(List<APIResponse> exchangeRateData) {
-        barChartModel = new BarChartModel();
-        ChartSeries cotacoesSeries = new ChartSeries();
-        cotacoesSeries.setLabel("Cotações API");
-
-        for (APIResponse data : exchangeRateData) {
-            String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(data.getDate());
-            Double value = data.getHigh();
-            String label = formattedDate + " - R$ " + String.format("%.2f", value);
-            cotacoesSeries.set(label, value);
-        }
-
-        barChartModel.addSeries(cotacoesSeries);
-        configurarGrafico();
-    }
-
-    public BarChartModel getBarChartModel() {
-        if (barChartModel == null) {
-            createBarModel();
-        }
-        return barChartModel;
-    }
-
-    private void createBarModel() {
-        if (cotacoesFiltradas == null) {
-            cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
-        }
-        atualizarGraficoBancoDados();
-    }
-    
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getSelectedCurrency() {
-		return selectedCurrency;
-	}
-
-	public void setSelectedCurrency(String selectedCurrency) {
-		this.selectedCurrency = selectedCurrency;
-	}
 
 	public Cotacoes getSelectedCotacao() {
         return selectedCotacao;
