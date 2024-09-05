@@ -12,7 +12,7 @@ public class APIResponse {
     private String codMoeda;
 
     @JsonProperty("codein")
-    private String codMoedaConversion;
+    private String codMoedaConvertida;
 
     @JsonProperty("name")
     private String nomeMoeda;
@@ -35,12 +35,12 @@ public class APIResponse {
         this.codMoeda = codMoeda;
     }
 
-    public String getCodMoedaConversion() {
-        return codMoedaConversion;
+    public String getCodMoedaConvertida() {
+        return codMoedaConvertida;
     }
 
-    public void setCodMoedaConversion(String codMoedaConversion) {
-        this.codMoedaConversion = codMoedaConversion;
+    public void setCodMoedaConvertida(String codMoedaConvertida) {
+        this.codMoedaConvertida = codMoedaConvertida;
     }
 
     public String getNomeMoeda() {

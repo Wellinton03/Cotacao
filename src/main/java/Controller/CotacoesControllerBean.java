@@ -1,12 +1,10 @@
 package Controller;
 
 import java.io.Serializable;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -14,17 +12,17 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+
 import DTO.FiltroDTO;
 import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
 import service.CotacoesService;
 import service.IndicadoresService;
-
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
 
 
 @Named

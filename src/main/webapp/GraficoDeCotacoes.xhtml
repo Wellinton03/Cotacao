@@ -69,11 +69,20 @@
                 closeOnEscape="true"
                 resizable="false"
                 modal="true">
-                <p:panelGrid columns="2" columnClasses="label-col, input-col" styleClass="modal-grid">
+                
+                <p:panelGrid 
+                	columns="2" 
+                	columnClasses="label-col, input-col" 
+                	styleClass="modal-grid">
+                	
                     <h:outputLabel value="Indicador: " for="indicadores" />
-                    <p:selectOneMenu required="true" id="indicadores" value="#{cotacoesControllerBean.idIndicadores}">
+                    <p:selectOneMenu 
+                    	required="true" 
+                    	id="indicadores" 
+                    	value="#{cotacoesControllerBean.idIndicadores}">
                         <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
                         <f:selectItems  value="#{cotacoesControllerBean.listaIndicadoresFiltrados}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
+                        
                     </p:selectOneMenu>
                     <h:outputLabel value="Filtro: " for="filtro" />
                     <p:selectOneMenu required="true" id="filtro" value="#{cotacoesControllerBean.selectedFilter}">

@@ -1,9 +1,11 @@
 package service;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -18,10 +20,6 @@ import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
 import response.APIResponse;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
 
 @Named
 @ApplicationScoped
@@ -50,6 +48,7 @@ public class CotacoesService implements Serializable {
     }
 
     public List<Cotacoes> todasCotacoes() {
+    	atualizarCotacoesDoBanco();
         return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
     }
 
@@ -94,6 +93,7 @@ public class CotacoesService implements Serializable {
     }
 
     public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long idIndicadores) {
+    	atualizarCotacoesDoBanco();
         String jpql = "SELECT new DTO.FiltroDTO(c.dataHora, c.valor) " +
                       "FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicial AND :dataFinal " +
                       "AND c.indicadores.id = :idIndicadores";
@@ -120,59 +120,67 @@ public class CotacoesService implements Serializable {
             return resultado.get(0);
         }
     }
-
-    public String formatDateForAPI(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        return sdf.format(date);
-    }
-
+    
     public void atualizarCotacoesDoBanco() {
         try {
-            List<String> moedas = apiService.obterMoedasDisponiveis();
+            List<String> moedas = List.of("USD-BRL", "EUR-BRL", "BTC-BRL");
+            List<APIResponse> apiResponses = apiService.getExchangeRates(moedas);
             
-            
-            for (String moeda : moedas) {
-                String moedaConsulta = moeda + "-BRL";
-                List<APIResponse> apiResponses = apiService.getExchangeRates(moedaConsulta, 2);
+            EntityTransaction tx = null;
+            try {
+                tx = manager.getTransaction();
+                tx.begin();
                 
-                EntityTransaction tx = null;
-                try {
-                    tx = manager.getTransaction();
-                    tx.begin();
-                    
-                    for (APIResponse response : apiResponses) {
-                        Date dataHora = response.getDataEHora();
-                        TypedQuery<Cotacoes> query = manager.createQuery(
-                            "SELECT c FROM Cotacoes c WHERE c.dataHora = :dataHora AND c.indicadores.description = :description", Cotacoes.class);
-                        query.setParameter("dataHora", dataHora);
-                        query.setParameter("description", response.getNomeMoeda());
+                for (APIResponse response : apiResponses) {
+                    Date dataHora = response.getDataEHora();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(dataHora);
+                    calendar.add(Calendar.MINUTE, -1);
+                    Date dataInicio = calendar.getTime();
 
-                        List<Cotacoes> cotacoesExistentes = query.getResultList();
+                    TypedQuery<Cotacoes> query = manager.createQuery(
+                        "SELECT c FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicio AND :dataHora AND c.indicadores.description = :description", Cotacoes.class);
+                    query.setParameter("dataInicio", dataInicio);
+                    query.setParameter("dataHora", dataHora);
+                    query.setParameter("description", response.getNomeMoeda());
+
+                    List<Cotacoes> cotacoesExistentes = query.getResultList();
+                    
+                    if (cotacoesExistentes.isEmpty()) {
+                        Date dataHora = response.getDataEHora();
+                        TimeZone apiTimeZone = TimeZone.getTimeZone("BRT"); 
+                        TimeZone targetTimeZone = TimeZone.getDefault(); 
                         
-                        if (cotacoesExistentes.isEmpty()) {
-                            Cotacoes cotacao = new Cotacoes();
-                            cotacao.setDataHora(dataHora); 
-                            cotacao.setValor(response.getAlta());  
-                            
-                            Indicadores indicador = verificarOuAdicionarIndicador(response.getNomeMoeda());
-                            cotacao.setIndicadores(indicador);
-                            
-                            manager.persist(cotacao);
-                        }
-                    }
-                    tx.commit();
-                } catch (Exception e) {
-                    if (tx != null && tx.isActive()) {
-                        tx.rollback();
-                    }
-                    e.printStackTrace();
-                } finally {
-                    if (manager != null) {
-                        manager.clear();
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(dataHora);
+                        int offset = targetTimeZone.getOffset(calendar.getTimeInMillis()) - apiTimeZone.getOffset(calendar.getTimeInMillis());
+                        calendar.add(Calendar.MILLISECOND, offset);
+                        Date adjustedDate = calendar.getTime();
+
+                        // O restante do código permanece o mesmo
+                        Calendar calendar2 = Calendar.getInstance();
+                        calendar2.setTime(adjustedDate);
+                        calendar2.add(Calendar.MINUTE, -1);
+                        Date dataInicio = calendar2.getTime(); 
+                        
+                        Indicadores indicador = verificarOuAdicionarIndicador(response.getNomeMoeda());
+                        cotacao.setIndicadores(indicador);
+                        
+                        manager.persist(cotacao);
                     }
                 }
+                tx.commit();
+            } catch (Exception e) {
+                if (tx != null && tx.isActive()) {
+                    tx.rollback();
+                }
+                e.printStackTrace();
+            } finally {
+                if (manager != null) {
+                    manager.clear();
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
