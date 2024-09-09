@@ -19,30 +19,42 @@
         </header>
 
         <h:form id="form">
-            <p:megaMenu orientation="horizontal" autoDisplay="false" styleClass="Menu">
+             <p:megaMenu orientation="horizontal" autoDisplay="false"
+                        styleClass="Menu">
                 <f:facet name="start">
-                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase" width="150" />
+                    <p:graphicImage name="images/primefaces-logo.svg" library="showcase"
+                                    width="150" />
                 </f:facet>
-                <p:menuitem value="Quit" icon="pi pi-home" outcome="/CadastroDeIndicadores" />
+                <p:menuitem value="Quit" icon="pi pi-home"
+                            outcome="/CadastroDeIndicadores" />
                 <p:divider layout="vertical" />
                 <p:submenu label="Tabelas" icon="pi pi-database">
-                    <p:submenu label="Indicadores">
-                        <p:menuitem value="Lista de Indicadores" outcome="/ListaDeIndicadores" />
-                    </p:submenu>
-                    <p:submenu label="Cotações">
-                        <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
-                    </p:submenu>
+                    <p:column>
+                        <p:submenu label="Indicadores">
+                            <p:menuitem value="Lista de Indicadores"
+                                        outcome="/ListaDeIndicadores" />
+                        </p:submenu>
+                        <p:submenu label="Cotações">
+                            <p:menuitem value="Lista de Cotações" outcome="/ListaDeCotacoes" />
+                        </p:submenu>
+                    </p:column>
                 </p:submenu>
                 <p:submenu label="Gráfico" icon="pi pi-chart-line">
-                    <p:submenu label="Gráfico de Cotações">
-                        <p:menuitem value="Análise de Cotações" outcome="/GraficoDeCotacoes"/>
-                    </p:submenu>
+                    <p:column>
+                        <p:submenu label="Gráfico de Cotações">
+                            <p:menuitem value="Análise de Cotações"  outcome="/GraficoDeCotacoes"/>
+                        </p:submenu>
+
+                    </p:column>
                 </p:submenu>
+
                 <p:submenu label="Configurações" icon="pi pi-fw pi-cog">
-                    <p:submenu label="Usuário">
-                        <p:menuitem value="Meus Dados"/>
-                        <p:menuitem value="Sair"/>
-                    </p:submenu>
+                    <p:column>
+                        <p:submenu label="Úsuario">
+                            <p:menuitem value="Meus Dados"/>
+                            <p:menuitem value="Sair"/>
+                        </p:submenu>
+                    </p:column>
                 </p:submenu>
             </p:megaMenu>
 
@@ -100,12 +112,33 @@
                     <p:datePicker id="dataInicial" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataInicial}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
                     <h:outputLabel for="dataFinal" value="Data Final: "/>
                     <p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
-                    <p:commandButton value="Filtrar" update="form chartCotacoes" action="#{cotacoesControllerBean.aplicarFiltro()}" oncomplete="PF('filtroWidgetVar').hide()" />
+                    <p:commandButton value="Filtrar" update="form chart" action="#{cotacoesControllerBean.aplicarFiltro()}" oncomplete="PF('filtroWidgetVar').hide()" />
                 </p:panelGrid>
             </p:dialog>
 
-            <p:chart type="bar" model="#{cotacoesControllerBean.barChartModel}" id="chartCotacoes" />
-
+             <p:chart id="chart" model="#{cotacoesControllerBean.barChartModel}" type="bar" extender="customizeDatatip" />
+             <h:outputScript>
+    function customizeDatatip() {
+        this.cfg.datatipFormatFunction = function(value) {
+            return 'R$ ' + value.y.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2
+            });
+        };
+        
+        this.cfg.axes.yaxis.tickOptions = {
+            formatString: 'R$ %.2f'
+        };
+        
+          this.cfg.seriesDefaults = {
+            rendererOptions: {
+                highlightMouseOver: true,
+                highlightMouseDown: true
+            }
+        };
+    }
+</h:outputScript>
+             
         </h:form>
 
         <footer>Gráfico de Cotações</footer>

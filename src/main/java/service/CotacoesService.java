@@ -1,11 +1,9 @@
 package service;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -48,7 +46,6 @@ public class CotacoesService implements Serializable {
     }
 
     public List<Cotacoes> todasCotacoes() {
-    	atualizarCotacoesDoBanco();
         return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
     }
 
@@ -93,7 +90,6 @@ public class CotacoesService implements Serializable {
     }
 
     public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long idIndicadores) {
-    	atualizarCotacoesDoBanco();
         String jpql = "SELECT new DTO.FiltroDTO(c.dataHora, c.valor) " +
                       "FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicial AND :dataFinal " +
                       "AND c.indicadores.id = :idIndicadores";
@@ -122,66 +118,67 @@ public class CotacoesService implements Serializable {
     }
     
     public void atualizarCotacoesDoBanco() {
+        EntityTransaction tx = null;
         try {
             List<String> moedas = List.of("USD-BRL", "EUR-BRL", "BTC-BRL");
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.YEAR, -2);
+
             List<APIResponse> apiResponses = apiService.getExchangeRates(moedas);
-            
-            EntityTransaction tx = null;
-            try {
+
+            Calendar hoje = Calendar.getInstance();
+            hoje.set(Calendar.HOUR_OF_DAY, 0);
+            hoje.set(Calendar.MINUTE, 0);
+            hoje.set(Calendar.SECOND, 0);
+            hoje.set(Calendar.MILLISECOND, 0);
+
+            while (!calendar.after(hoje)) {
+                Date dataAtual = calendar.getTime();
+
                 tx = manager.getTransaction();
-                tx.begin();
-                
+                if (!tx.isActive()) {
+                    tx.begin();
+                }
+
                 for (APIResponse response : apiResponses) {
-                    Date dataHora = response.getDataEHora();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(dataHora);
-                    calendar.add(Calendar.MINUTE, -1);
-                    Date dataInicio = calendar.getTime();
+                    Indicadores indicador = verificarOuAdicionarIndicador(response.getNomeMoeda());
 
                     TypedQuery<Cotacoes> query = manager.createQuery(
-                        "SELECT c FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicio AND :dataHora AND c.indicadores.description = :description", Cotacoes.class);
-                    query.setParameter("dataInicio", dataInicio);
-                    query.setParameter("dataHora", dataHora);
+                        "SELECT c FROM Cotacoes c WHERE c.dataHora = :dataSemHora AND c.indicadores.description = :description", Cotacoes.class);
+                    query.setParameter("dataSemHora", dataAtual);
                     query.setParameter("description", response.getNomeMoeda());
 
                     List<Cotacoes> cotacoesExistentes = query.getResultList();
-                    
-                    if (cotacoesExistentes.isEmpty()) {
-                        Date dataHora = response.getDataEHora();
-                        TimeZone apiTimeZone = TimeZone.getTimeZone("BRT"); 
-                        TimeZone targetTimeZone = TimeZone.getDefault(); 
-                        
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(dataHora);
-                        int offset = targetTimeZone.getOffset(calendar.getTimeInMillis()) - apiTimeZone.getOffset(calendar.getTimeInMillis());
-                        calendar.add(Calendar.MILLISECOND, offset);
-                        Date adjustedDate = calendar.getTime();
 
-                        // O restante do código permanece o mesmo
-                        Calendar calendar2 = Calendar.getInstance();
-                        calendar2.setTime(adjustedDate);
-                        calendar2.add(Calendar.MINUTE, -1);
-                        Date dataInicio = calendar2.getTime(); 
-                        
-                        Indicadores indicador = verificarOuAdicionarIndicador(response.getNomeMoeda());
-                        cotacao.setIndicadores(indicador);
-                        
-                        manager.persist(cotacao);
+                    if (cotacoesExistentes.isEmpty()) {
+                        Cotacoes novaCotacao = new Cotacoes();
+                        novaCotacao.setDataHora(dataAtual);
+                        novaCotacao.setValor(response.getAlta());
+                        novaCotacao.setIndicadores(indicador);
+
+                        manager.persist(novaCotacao);
+                    } else {
+                        Cotacoes cotacaoExistente = cotacoesExistentes.get(0);
+                        cotacaoExistente.setValor(response.getAlta());
+
+                        manager.merge(cotacaoExistente);
                     }
                 }
+
                 tx.commit();
-            } catch (Exception e) {
-                if (tx != null && tx.isActive()) {
-                    tx.rollback();
-                }
-                e.printStackTrace();
-            } finally {
-                if (manager != null) {
-                    manager.clear();
-                }
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
             }
         } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             e.printStackTrace();
+        } finally {
+            if (manager != null) {
+                manager.clear();
+            }
         }
     }
+
 }

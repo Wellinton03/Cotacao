@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -139,6 +140,7 @@ public class CotacoesControllerBean implements Serializable {
         if (listaCotacoes == null) {
             listaCotacoes = cotacoesService.todasCotacoes();
         }
+        System.out.println(listaCotacoes);
         return listaCotacoes;
     }
     
@@ -222,26 +224,29 @@ public class CotacoesControllerBean implements Serializable {
         if (cotacoesFiltradas == null) {
             cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
         }
+        
         barChartModel = new BarChartModel();
-
+        
         ChartSeries cotacoesSeries = new ChartSeries();
         cotacoesSeries.setLabel("Cotações");
 
+        TimeZone timeZone = TimeZone.getDefault(); 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormat.setTimeZone(timeZone);
 
         for (FiltroDTO cotacao : cotacoesFiltradas) {
-        	String formattedDate = dateFormat.format(cotacao.getDataHora());
+            String formattedDate = dateFormat.format(cotacao.getDataHora());
             Double value = cotacao.getValor();
-            String label = formattedDate + " - R$ " + String.format("%.2f", value);
-            cotacoesSeries.set(label, value);
+            cotacoesSeries.set(formattedDate, value);
         }
 
         barChartModel.addSeries(cotacoesSeries);
-
+        
         barChartModel.setTitle("Gráfico de Cotações");
         barChartModel.setLegendPosition("ne");
         barChartModel.setAnimate(true);
-        barChartModel.setShowDatatip(false);
+        barChartModel.setShowDatatip(true);
+        barChartModel.setExtender("customizeDatatip");
 
         Axis xAxis = barChartModel.getAxis(AxisType.X);
         xAxis.setLabel("Data e Valor");

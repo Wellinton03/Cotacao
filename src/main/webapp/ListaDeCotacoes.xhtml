@@ -151,12 +151,12 @@
                     </h:outputText>
                 </p:column>
 
-                <p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
-                    <h:outputText value="#{cotacoes.dataHora}">
-                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                    </h:outputText>
-                </p:column>
-            </p:dataTable>
+                 <p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
+        <h:outputText value="#{cotacoes.dataHora}">
+            <f:convertDateTime pattern="dd/MM/yyyy" />
+        </h:outputText>
+    </p:column>
+           </p:dataTable>
 
             <p:dialog
                 header="Nova Cotação"
