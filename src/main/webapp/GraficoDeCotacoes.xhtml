@@ -91,7 +91,7 @@
                     <p:selectOneMenu 
                     	required="true" 
                     	id="indicadores" 
-                    	value="#{cotacoesControllerBean.idIndicadores}">
+                    	value="#{cotacoesControllerBean.indicadorId}">
                         <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
                         <f:selectItems  value="#{indicadoresControllerBean.listaIndicadores}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
                         

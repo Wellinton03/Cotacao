@@ -101,43 +101,47 @@ public class CotacoesService implements Serializable {
         return query.getResultList();
     }
 
-    public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long idIndicadores) {
+    public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long indicadorId) {
         String jpql = "SELECT new DTO.FiltroDTO(c.dataHora, c.valor) " +
                       "FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicial AND :dataFinal " +
-                      "AND c.indicadores.id = :idIndicadores";
+                      "AND c.indicadores.id = :indicadorId";
         return manager.createQuery(jpql, FiltroDTO.class)
                       .setParameter("dataInicial", dataInicial)
                       .setParameter("dataFinal", dataFinal)
-                      .setParameter("idIndicadores", idIndicadores)
+                      .setParameter("indicadorId", indicadorId)
                       .getResultList();
     }
     
-    public Indicadores verificarOuAdicionarIndicador(String nomeMoeda) {
+    public String obterDescricaoIndicador(Long indicadorId) {
+        Indicadores indicador = manager.find(Indicadores.class, indicadorId);
+        return indicador != null ? indicador.getDescription() : null;
+    }
+  
+
+    private Indicadores buscarOuCriarIndicador(String symbol) {
         TypedQuery<Indicadores> query = manager.createQuery(
             "SELECT i FROM Indicadores i WHERE i.description = :description", Indicadores.class);
-        query.setParameter("description", nomeMoeda);
+        query.setParameter("description", symbol);
+        
+        List<Indicadores> indicadoresExistentes = query.getResultList();
 
-        List<Indicadores> resultado = query.getResultList();
-
-        if (resultado.isEmpty()) {
-            Indicadores indicadores = new Indicadores();
-            indicadores.setDescription(nomeMoeda);
-            manager.persist(indicadores); 
-            return indicadores;
+        if (indicadoresExistentes.isEmpty()) {
+            Indicadores novoIndicador = new Indicadores();
+            novoIndicador.setDescription(symbol);
+            manager.persist(novoIndicador);
+            return novoIndicador;
         } else {
-            return resultado.get(0);
+            return indicadoresExistentes.get(0);
         }
     }
     
-    public void atualizarCotacoesDoBanco() {
+    public void atualizarCotacoesDoBanco(String symbol) {
         EntityTransaction tx = null;
         try {
-            List<String> moedas = List.of("USD-BRL", "EUR-BRL", "BTC-BRL");
-
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.YEAR, -1);
+            calendar.add(Calendar.YEAR, -1); 
 
-            List<APIResponse> apiResponses = apiService.getExchangeRates(moedas);
+            List<APIResponse> apiResponses = apiService.getHistoricalData(symbol);
 
             Calendar hoje = Calendar.getInstance();
             hoje.set(Calendar.HOUR_OF_DAY, 0);
@@ -145,50 +149,48 @@ public class CotacoesService implements Serializable {
             hoje.set(Calendar.SECOND, 0);
             hoje.set(Calendar.MILLISECOND, 0);
 
-            while (!calendar.after(hoje)) {
-                Date dataAtual = calendar.getTime();
-
-                tx = manager.getTransaction();
-                if (!tx.isActive()) {
-                    tx.begin();
-                }
-
-                for (APIResponse response : apiResponses) {
-                    Indicadores indicador = verificarOuAdicionarIndicador(response.getNomeMoeda());
-
-                    TypedQuery<Cotacoes> query = manager.createQuery(
-                        "SELECT c FROM Cotacoes c WHERE c.dataHora = :dataSemHora AND c.indicadores.description = :description", Cotacoes.class);
-                    query.setParameter("dataSemHora", dataAtual);
-                    query.setParameter("description", response.getNomeMoeda());
-
-                    List<Cotacoes> cotacoesExistentes = query.getResultList();
-
-                    if (cotacoesExistentes.isEmpty()) {
-                        Cotacoes novaCotacao = new Cotacoes();
-                        novaCotacao.setDataHora(dataAtual);
-                        novaCotacao.setValor(response.getAlta());
-                        novaCotacao.setIndicadores(indicador);
-
-                        manager.persist(novaCotacao);
-                    } else {
-                        Cotacoes cotacaoExistente = cotacoesExistentes.get(0);
-                        cotacaoExistente.setValor(response.getAlta());
-
-                        manager.merge(cotacaoExistente);
-                    }
-                }
-
-                tx.commit();
-                calendar.add(Calendar.DAY_OF_YEAR, 1);
+            tx = manager.getTransaction();
+            if (!tx.isActive()) {
+                tx.begin();
             }
+
+            for (APIResponse response : apiResponses) {
+                Date dataAtual = response.getDataEHora();
+
+                Indicadores indicador = buscarOuCriarIndicador(symbol);
+
+                TypedQuery<Cotacoes> query = manager.createQuery(
+                    "SELECT c FROM Cotacoes c WHERE c.dataHora = :dataHora AND c.indicadores.description = :description", Cotacoes.class);
+                query.setParameter("dataHora", dataAtual);
+                query.setParameter("description", symbol);
+
+                List<Cotacoes> cotacoesExistentes = query.getResultList();
+
+                if (cotacoesExistentes.isEmpty()) {
+                    Cotacoes novaCotacao = new Cotacoes();
+                    novaCotacao.setDataHora(dataAtual);
+                    novaCotacao.setValor(response.getFechamento());
+                    novaCotacao.setIndicadores(indicador);
+
+                    manager.persist(novaCotacao);
+                } else {
+                    Cotacoes cotacaoExistente = cotacoesExistentes.get(0);
+                    cotacaoExistente.setValor(response.getFechamento());
+
+                    manager.merge(cotacaoExistente);
+                }
+            }
+
+            tx.commit(); 
+
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
-                tx.rollback();
+                tx.rollback(); 
             }
             e.printStackTrace();
         } finally {
             if (manager != null) {
-                manager.clear();
+                manager.clear(); 
             }
         }
     }

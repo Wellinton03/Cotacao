@@ -45,7 +45,8 @@ public class CotacoesControllerBean implements Serializable {
     private String selectedFilter;
     private Date dataInicial;
     private Date dataFinal;
-    private Long idIndicadores;
+    private Long indicadorId;
+    private String indicadorDescription;
     
     private BarChartModel barChartModel;
     
@@ -64,7 +65,17 @@ public class CotacoesControllerBean implements Serializable {
     	selectedFilter = null;
     	dataInicial = null;
     	dataFinal = null;
-    	idIndicadores = null;
+    	indicadorId = null;
+    }
+    
+    public void atualizarDescricaoSelecionada() {
+        if (indicadorId != null) {
+        	indicadorDescription = cotacoesService.obterDescricaoIndicador(indicadorId);
+        }
+    }
+    
+    public void atualizarCotacoes() {
+        cotacoesService.atualizarCotacoesDoBanco(indicadorDescription);
     }
     
     public void todosIndicadores() {
@@ -83,10 +94,7 @@ public class CotacoesControllerBean implements Serializable {
     	cotacoesService.deletaCotacao();
     }
     
-    public void atualizaCotacao() {
-    	cotacoesService.atualizarCotacoesDoBanco();
-    }
-
+   
     public void salvar() {
         if (selectedCotacao.getIndicadores() != null) {
             cotacoesService.salvar(selectedCotacao);
@@ -129,7 +137,7 @@ public class CotacoesControllerBean implements Serializable {
     
     public List<FiltroDTO> getListaCotacoesFiltradas() {
     	if(cotacoesFiltradas == null) {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, indicadorId);
     }
     	return cotacoesFiltradas;
     }
@@ -180,32 +188,39 @@ public class CotacoesControllerBean implements Serializable {
     
     
     public void filtro1Dia() {
-    	cotacoesFiltradas =  cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 1), new Date(), idIndicadores );
+    	atualizarCotacoes();
+    	cotacoesFiltradas =  cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 1), new Date(), indicadorId );
     }
     
     public void filtro3Dias() {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 3), new Date(), idIndicadores );
+    	atualizarCotacoes();
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 3), new Date(), indicadorId );
     }
     
     public void filtro5Dias() {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 5), new Date(), idIndicadores);
+    	atualizarCotacoes();
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 5), new Date(), indicadorId);
     }
     
     public void filtro10Dias() {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 10), new Date(), idIndicadores);
+    	atualizarCotacoes();
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 10), new Date(), indicadorId);
     }
     
     
     public void filtro15Dias() {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 15), new Date(), idIndicadores);
+    	atualizarCotacoes();
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 15), new Date(), indicadorId);
     }
     
     public void filtro30Dias() {
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 30), new Date(), idIndicadores);
+    	atualizarCotacoes();
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 30), new Date(), indicadorId);
     }
     
     public void filtroCustom() {
-    	 cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+    	atualizarCotacoes();
+    	 cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, indicadorId);
     }
     
     public static Date getDataAnterior(Date dataBase, int dias) {
@@ -224,7 +239,7 @@ public class CotacoesControllerBean implements Serializable {
     
     private void createBarModel() {
         if (cotacoesFiltradas == null) {
-            cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, idIndicadores);
+            cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, indicadorId);
         }
         
         barChartModel = new BarChartModel();
@@ -304,16 +319,25 @@ public class CotacoesControllerBean implements Serializable {
 	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
 	}
-	
-	
 
-	public Long getIdIndicadores() {
-		return idIndicadores;
+	public Long getIndicadorId() {
+		return indicadorId;
 	}
 
-	public void setIdIndicadores(Long idIndicadores) {
-		this.idIndicadores = idIndicadores;
+	public void setIndicadorId(Long indicadorId) {
+		this.indicadorId = indicadorId;
+		atualizarDescricaoSelecionada();
 	}
+
+	public String getIndicadorDescription() {
+		return indicadorDescription;
+	}
+
+	public void setIndicadorDescription(String indicadorDescription) {
+		this.indicadorDescription = indicadorDescription;
+	}
+	
+	
 
 }
     
