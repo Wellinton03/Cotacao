@@ -67,9 +67,6 @@ public class CotacoesControllerBean implements Serializable {
     	idIndicadores = null;
     }
     
-   
-    
-    
     public void todosIndicadores() {
         listaIndicadores = indicadorService.todosIndicadores();
     }
@@ -80,6 +77,14 @@ public class CotacoesControllerBean implements Serializable {
      
     public void pesquisa() {
         listaCotacoes = cotacoesService.buscar(termoPesquisa);
+    }
+    
+    public void deletaCotacao() {
+    	cotacoesService.deletaCotacao();
+    }
+    
+    public void atualizaCotacao() {
+    	cotacoesService.atualizarCotacoesDoBanco();
     }
 
     public void salvar() {
@@ -140,7 +145,6 @@ public class CotacoesControllerBean implements Serializable {
         if (listaCotacoes == null) {
             listaCotacoes = cotacoesService.todasCotacoes();
         }
-        System.out.println(listaCotacoes);
         return listaCotacoes;
     }
     
@@ -207,9 +211,7 @@ public class CotacoesControllerBean implements Serializable {
     public static Date getDataAnterior(Date dataBase, int dias) {
     	Calendar calendar = Calendar.getInstance();
     	calendar.setTime(dataBase);
-    	System.out.println(dataBase);
     	calendar.add(Calendar.DAY_OF_MONTH, -dias);
-    	System.out.println(calendar.getTime());
     	return calendar.getTime();
     }
     

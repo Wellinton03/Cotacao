@@ -93,7 +93,7 @@
                     	id="indicadores" 
                     	value="#{cotacoesControllerBean.idIndicadores}">
                         <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
-                        <f:selectItems  value="#{cotacoesControllerBean.listaIndicadoresFiltrados}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
+                        <f:selectItems  value="#{indicadoresControllerBean.listaIndicadores}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
                         
                     </p:selectOneMenu>
                     <h:outputLabel value="Filtro: " for="filtro" />

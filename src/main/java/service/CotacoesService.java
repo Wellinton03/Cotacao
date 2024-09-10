@@ -46,7 +46,19 @@ public class CotacoesService implements Serializable {
     }
 
     public List<Cotacoes> todasCotacoes() {
-        return manager.createQuery("from Cotacoes", Cotacoes.class).getResultList();
+        return manager.createQuery(" from Cotacoes", Cotacoes.class).getResultList();
+    }
+    
+    public void deletaCotacao() {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            	manager.createQuery("DELETE FROM Cotacoes").executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        }
     }
 
     public void salvar(Cotacoes cotacoes) {
@@ -123,7 +135,7 @@ public class CotacoesService implements Serializable {
             List<String> moedas = List.of("USD-BRL", "EUR-BRL", "BTC-BRL");
 
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.YEAR, -2);
+            calendar.add(Calendar.YEAR, -1);
 
             List<APIResponse> apiResponses = apiService.getExchangeRates(moedas);
 
