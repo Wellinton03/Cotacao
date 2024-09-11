@@ -2,8 +2,8 @@ package Controller;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -43,8 +43,8 @@ public class CotacoesControllerBean implements Serializable {
     private String termoPesquisa;
     
     private String selectedFilter;
-    private Date dataInicial;
-    private Date dataFinal;
+    private LocalDateTime dataInicial;
+    private LocalDateTime dataFinal;
     private Long indicadorId;
     private String indicadorDescription;
     
@@ -54,10 +54,11 @@ public class CotacoesControllerBean implements Serializable {
     private List<Indicadores> listaIndicadores;
     private List<IndicadorDTO> indicadoresFiltrados;
     private List<FiltroDTO> cotacoesFiltradas;
+    
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public void initNewCotacao() {
         selectedCotacao = new Cotacoes();
-        selectedCotacao.setIndicadores(new Indicadores());
         listaIndicadores = indicadorService.todosIndicadores();
     }
     
@@ -66,6 +67,10 @@ public class CotacoesControllerBean implements Serializable {
     	dataInicial = null;
     	dataFinal = null;
     	indicadorId = null;
+    }
+    
+    public static String formatLocalDateTime(LocalDateTime dateTime) {
+    	return dateTime.format(FORMATTER);
     }
     
     public void atualizarDescricaoSelecionada() {
@@ -188,46 +193,36 @@ public class CotacoesControllerBean implements Serializable {
     
     
     public void filtro1Dia() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas =  cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 1), new Date(), indicadorId );
+    	cotacoesFiltradas =  cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 1), LocalDateTime.now(), indicadorId );
     }
     
     public void filtro3Dias() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 3), new Date(), indicadorId );
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 3), LocalDateTime.now(), indicadorId );
     }
     
     public void filtro5Dias() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 5), new Date(), indicadorId);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 5), LocalDateTime.now(), indicadorId);
     }
     
     public void filtro10Dias() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 10), new Date(), indicadorId);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 10), LocalDateTime.now(), indicadorId);
     }
     
     
     public void filtro15Dias() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 15), new Date(), indicadorId);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 15), LocalDateTime.now(), indicadorId);
     }
     
     public void filtro30Dias() {
-    	atualizarCotacoes();
-    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(new Date(), 30), new Date(), indicadorId);
+    	cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(getDataAnterior(LocalDateTime.now(), 30), LocalDateTime.now(), indicadorId);
     }
     
     public void filtroCustom() {
-    	atualizarCotacoes();
     	 cotacoesFiltradas = cotacoesService.buscarPorPeriodoEIndicador(dataInicial, dataFinal, indicadorId);
     }
     
-    public static Date getDataAnterior(Date dataBase, int dias) {
-    	Calendar calendar = Calendar.getInstance();
-    	calendar.setTime(dataBase);
-    	calendar.add(Calendar.DAY_OF_MONTH, -dias);
-    	return calendar.getTime();
+    public static LocalDateTime getDataAnterior(LocalDateTime dataBase, int dias) {
+    	return dataBase.minusDays(dias);
     }
     
     public BarChartModel getBarChartModel() {
@@ -247,13 +242,11 @@ public class CotacoesControllerBean implements Serializable {
         ChartSeries cotacoesSeries = new ChartSeries();
         cotacoesSeries.setLabel("Cotações");
 
-        TimeZone timeZone = TimeZone.getDefault(); 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        dateFormat.setTimeZone(timeZone);
-
         for (FiltroDTO cotacao : cotacoesFiltradas) {
-            String formattedDate = dateFormat.format(cotacao.getDataHora());
-            Double value = cotacao.getValor();
+        	 LocalDateTime dateTime = cotacao.getDataHora();
+             
+             String formattedDate = dateTime.format(FORMATTER);
+             Double value = cotacao.getValor();
             cotacoesSeries.set(formattedDate, value);
         }
 
@@ -304,19 +297,19 @@ public class CotacoesControllerBean implements Serializable {
 		this.selectedFilter = selectedFilter;
 	}
 
-	public Date getDataInicial() {
+	public LocalDateTime getDataInicial() {
 		return dataInicial;
 	}
 
-	public void setDataInicial(Date dataInicial) {
+	public void setDataInicial(LocalDateTime dataInicial) {
 		this.dataInicial = dataInicial;
 	}
 
-	public Date getDataFinal() {
+	public LocalDateTime getDataFinal() {
 		return dataFinal;
 	}
 
-	public void setDataFinal(Date dataFinal) {
+	public void setDataFinal(LocalDateTime dataFinal) {
 		this.dataFinal = dataFinal;
 	}
 

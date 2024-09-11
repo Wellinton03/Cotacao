@@ -1,22 +1,23 @@
 package DTO;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class FiltroDTO {
-    private Date dataHora;
+    private LocalDateTime dataHora;
     private double valor;
 
-    public FiltroDTO(Date dataHora, double valor) {
+    public FiltroDTO(LocalDateTime dataHora, double valor) {
         this.dataHora = dataHora;
         this.valor = valor;
     }
 
-    public Date getDataHora() {
+    public LocalDateTime getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(Date dataHora) {
+    public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
 

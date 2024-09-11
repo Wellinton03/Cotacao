@@ -1,5 +1,6 @@
 package response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,7 +20,7 @@ public class APIResponse {
 
     @JsonProperty("date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dataEHora;
+    private LocalDateTime dataEHora;
 
 	public Double getFechamento() {
 		return fechamento;
@@ -45,11 +46,11 @@ public class APIResponse {
 		this.baixa = baixa;
 	}
 
-	public Date getDataEHora() {
+	public LocalDateTime getDataEHora() {
 		return dataEHora;
 	}
 
-	public void setDataEHora(Date dataEHora) {
+	public void setDataEHora(LocalDateTime dataEHora) {
 		this.dataEHora = dataEHora;
 	}
 

@@ -152,8 +152,7 @@
                 </p:column>
 
                  <p:column headerText="Data da cotação" sortBy="#{cotacoes.dataHora}">
-        <h:outputText value="#{cotacoes.dataHora}">
-            <f:convertDateTime pattern="dd/MM/yyyy" />
+        <h:outputText value="#{cotacoesControllerBean.formatLocalDateTime(cotacoes.dataHora)}">
         </h:outputText>
     </p:column>
            </p:dataTable>
@@ -184,7 +183,7 @@
                         required="true">
                         <f:selectItem itemLabel="Selecione..."
                                       noSelectionOption="true"
-                                      itemValue="#{null}"
+                                      itemValue=""
                                       itemDisabled="#{not empty cotacoesControllerBean.selectedCotacao.indicadores}"/>
                         <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador"
                                        itemLabel="#{indicador.description}" itemValue="#{indicador}"/>

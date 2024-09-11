@@ -82,6 +82,8 @@
                 resizable="false"
                 modal="true">
                 
+                <p:defaultCommand target="filterButton" scope="filtroDialog"/>
+                
                 <p:panelGrid 
                 	columns="2" 
                 	columnClasses="label-col, input-col" 
@@ -92,8 +94,14 @@
                     	required="true" 
                     	id="indicadores" 
                     	value="#{cotacoesControllerBean.indicadorId}">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
-                        <f:selectItems  value="#{indicadoresControllerBean.listaIndicadores}" var="indicador" itemLabel="#{indicador.description}" itemValue="#{indicador.id}"/>
+                        <f:selectItem 
+                        	itemLabel="Selecione..." 
+                        	itemValue="" 
+                        	noSelectionOption="true" />
+                        <f:selectItems 
+                        	value="#{indicadoresControllerBean.listaIndicadores}" 
+                        	var="indicador" itemLabel="#{indicador.description}" 
+                        	itemValue="#{indicador.id}"/>
                         
                     </p:selectOneMenu>
                     <h:outputLabel value="Filtro: " for="filtro" />
@@ -108,11 +116,20 @@
                         <f:selectItem itemLabel="Personalizado" itemValue="custom" />
                         <p:ajax update="dataInicial dataFinal" process="@this" />
                     </p:selectOneMenu>
+                    
                     <h:outputLabel for="dataInicial" value="Data Inicial: " />
                     <p:datePicker id="dataInicial" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataInicial}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    
                     <h:outputLabel for="dataFinal" value="Data Final: "/>
                     <p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
-                    <p:commandButton value="Filtrar" update="form chart" action="#{cotacoesControllerBean.aplicarFiltro()}" oncomplete="PF('filtroWidgetVar').hide()" />
+                    
+                    <p:commandButton 
+                    	value="Filtrar" 
+                    	id="filterButton"
+                    	update="form chart"
+                    	styleClass="button-modal" 
+                    	action="#{cotacoesControllerBean.aplicarFiltro()}" 
+                    	oncomplete="PF('filtroWidgetVar').hide()" />
                 </p:panelGrid>
             </p:dialog>
 

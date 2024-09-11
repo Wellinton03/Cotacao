@@ -155,8 +155,9 @@
                 <p:defaultCommand target="saveCommandButton" scope="indicadoresDialog"/>
 
                 <h:panelGrid 
-                    columns="2" 
-                    styleClass="input-modal"
+                    columns="2"
+                    columnClasses="label-col, input-col"
+                    styleClass="modal-grid"
                     id="indicadorPanelGrid"
                     rendered="#{indicadoresControllerBean.selectedIndicador ne null}">
 
@@ -164,9 +165,11 @@
                     <p:inputText 
                         id="description"
                         value="#{indicadoresControllerBean.selectedIndicador.description}"
-                        size="80" 
-                        maxlength="120" />
-                    <div>
+                        size="10" 
+                        maxlength="10"
+                        required="true"
+                        style="text-transform: uppercase;" />
+                        
                         <p:commandButton 
                         id="saveCommandButton" 
                         value="Salvar"
@@ -176,7 +179,6 @@
 						oncomplete="PF('indicadorDialogWidgetVar').hide()" 
 						process="indicadoresDialog"  />
 
-                    </div>
                 </h:panelGrid>
             </p:dialog>
         </h:form>

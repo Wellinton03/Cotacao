@@ -1,6 +1,7 @@
 package service;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +102,7 @@ public class CotacoesService implements Serializable {
         return query.getResultList();
     }
 
-    public List<FiltroDTO> buscarPorPeriodoEIndicador(Date dataInicial, Date dataFinal, Long indicadorId) {
+    public List<FiltroDTO> buscarPorPeriodoEIndicador(LocalDateTime dataInicial, LocalDateTime dataFinal, Long indicadorId) {
         String jpql = "SELECT new DTO.FiltroDTO(c.dataHora, c.valor) " +
                       "FROM Cotacoes c WHERE c.dataHora BETWEEN :dataInicial AND :dataFinal " +
                       "AND c.indicadores.id = :indicadorId";
@@ -155,7 +156,7 @@ public class CotacoesService implements Serializable {
             }
 
             for (APIResponse response : apiResponses) {
-                Date dataAtual = response.getDataEHora();
+                LocalDateTime dataAtual = response.getDataEHora();
 
                 Indicadores indicador = buscarOuCriarIndicador(symbol);
 

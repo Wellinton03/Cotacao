@@ -1,10 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "Cotacoes")
@@ -27,13 +24,12 @@ public class Cotacoes implements Serializable {
     private Long id;
 
     @Column(name = "data_Hora")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataHora;
+    private LocalDateTime dataHora;
 
     @Column(name = "valor")
     private Double valor;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "id_indicador")
     private Indicadores indicadores;
 
@@ -53,12 +49,12 @@ public class Cotacoes implements Serializable {
         this.id = id;
     }
 
-    public Date getDataHora() {
+    public LocalDateTime getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
+    public void setDataHora(LocalDateTime dataAtual) {
+        this.dataHora = dataAtual;
     }
 
     public Double getValor() {
