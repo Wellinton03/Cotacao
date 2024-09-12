@@ -52,17 +52,32 @@ body #form .buttonAdd {
     border-color: #28a745;
 	
 }
+
+body #form .buttonAdd:hover {
+	background-color:#006400;
+	border-color: black;
+}
+
 body #form .buttonEdit {
 	margin-left: 5px;
 	background-color: #ffc107;
     border-color: #ffc107;
 	
 }
+
+body #form .buttonEdit:hover {
+	background-color: #DAA520;
+	border-color: black;
+} 
 body #form .buttonDelete {
 	margin-left: 5px;
-	 background-color: #dc3545;
+	background-color: #FF0000;
     border-color: #dc3545;
 	
+}
+
+body #form .buttonDelete:hover {
+	background-color: #dc3545;
 }
 
 body #form .search-bar {

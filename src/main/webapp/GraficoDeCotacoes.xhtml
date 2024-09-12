@@ -106,7 +106,7 @@
                     </p:selectOneMenu>
                     <h:outputLabel value="Filtro: " for="filtro" />
                     <p:selectOneMenu required="true" id="filtro" value="#{cotacoesControllerBean.selectedFilter}">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" required="true"/>
+                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
                         <f:selectItem itemLabel="1 Dia - 24Hrs" itemValue="1" />
                         <f:selectItem itemLabel="3 Dias - 48Hrs" itemValue="3" />
                         <f:selectItem itemLabel="5 Dias - 120Hrs" itemValue="5" />
@@ -118,10 +118,23 @@
                     </p:selectOneMenu>
                     
                     <h:outputLabel for="dataInicial" value="Data Inicial: " />
-                    <p:datePicker id="dataInicial" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataInicial}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    <p:datePicker 
+                    	id="dataInicial" 
+                    	showButtonBar="true" 
+                    	timeControlType="spinner" 
+                    	showTime="true" value="#{cotacoesControllerBean.dataInicial}" 
+                    	disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}"
+                    	required="true" />
                     
                     <h:outputLabel for="dataFinal" value="Data Final: "/>
-                    <p:datePicker id="dataFinal" showButtonBar="true" timeControlType="spinner" showTime="true" value="#{cotacoesControllerBean.dataFinal}" disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}" />
+                    <p:datePicker 
+                    	id="dataFinal" 
+                    	showButtonBar="true" 
+                    	timeControlType="spinner" 
+                    	showTime="true" 
+                    	value="#{cotacoesControllerBean.dataFinal}" 
+                    	disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}"
+                    	required="true" />
                     
                     <p:commandButton 
                     	value="Filtrar" 

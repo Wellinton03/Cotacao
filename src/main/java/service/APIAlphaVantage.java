@@ -4,28 +4,25 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import response.APIResponse;
 
-public class APIService {
+public class APIAlphaVantage {
 
-    private static final String API_KEY = "VYZH5608LE9PNXL2";
+    private static final String API_KEY = "L1OP9MUM7XRKRHOU";
     private ObjectMapper mapper = new ObjectMapper();
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
-    public List<APIResponse> getHistoricalData(String symbol) {
+    public List<APIResponse> getStockHistoryData(String symbol) {
         String urlString = String.format("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", symbol, API_KEY);
 
         List<APIResponse> responses = new ArrayList<>();

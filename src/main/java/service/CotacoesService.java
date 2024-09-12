@@ -18,6 +18,7 @@ import DTO.FiltroDTO;
 import DTO.IndicadorDTO;
 import entity.Cotacoes;
 import entity.Indicadores;
+import response.APICurrencyResponse;
 import response.APIResponse;
 
 @Named
@@ -27,7 +28,8 @@ public class CotacoesService implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private EntityManager manager;
-    APIService apiService = new APIService();
+    APIAlphaVantage apiAlphaVantage = new APIAlphaVantage();
+    APIAwesome apiAwesome = new APIAwesome();
     
     public CotacoesService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("cotacoesDatabase");
@@ -136,13 +138,61 @@ public class CotacoesService implements Serializable {
         }
     }
     
-    public void atualizarCotacoesDoBanco(String symbol) {
+    public void atualizarMoedas(String moeda, String startDate, String finalDate ) {
+    	EntityTransaction transaction = null;
+    	try {
+    		List<APICurrencyResponse> apiResponses = apiAwesome.getCurrencyHistoryData(moeda, startDate, finalDate);
+    		
+    		transaction = manager.getTransaction();
+    			if(!transaction.isActive()) {
+    				transaction.begin();
+    			}
+    			for (APICurrencyResponse response : apiResponses) {
+    				LocalDateTime dataAtual = response.getDataHora();
+    				Indicadores indicador = buscarOuCriarIndicador(moeda);
+    				
+    				TypedQuery<Cotacoes> query = manager.createQuery(
+    				        "SELECT c FROM Cotacoes c WHERE c.dataHora = :dataHora AND c.indicadores.description = :description", Cotacoes.class);
+    				    query.setParameter("dataHora", dataAtual);
+    				    query.setParameter("description", moeda);
+    				    
+    				 List<Cotacoes> cotacoesExistentes = query.getResultList();
+    				 
+    				 if(cotacoesExistentes.isEmpty()) {
+    					 Cotacoes novaCotacao = new Cotacoes();
+    					 novaCotacao.setDataHora(dataAtual);
+    					 novaCotacao.setValor(response.getBid());
+    					 novaCotacao.setIndicadores(indicador);
+    					 
+    					 manager.persist(novaCotacao);
+    				 } else {
+    					 Cotacoes cotacaoExistente = cotacoesExistentes.get(0);
+    					 
+    					 cotacaoExistente.setValor(response.getBid());
+
+    				     manager.merge(cotacaoExistente);
+    				 }
+    				}
+    			transaction.commit();
+    	} catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+            	transaction.rollback(); 
+            }
+            e.printStackTrace();
+        } finally {
+            if (manager != null) {
+                manager.clear(); 
+            }
+        }
+    }
+    
+    public void atualizarAcoes(String symbol) {
         EntityTransaction tx = null;
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.YEAR, -1); 
 
-            List<APIResponse> apiResponses = apiService.getHistoricalData(symbol);
+            List<APIResponse> apiResponses = apiAlphaVantage.getStockHistoryData(symbol);
 
             Calendar hoje = Calendar.getInstance();
             hoje.set(Calendar.HOUR_OF_DAY, 0);
@@ -181,6 +231,7 @@ public class CotacoesService implements Serializable {
                     manager.merge(cotacaoExistente);
                 }
             }
+            
 
             tx.commit(); 
 

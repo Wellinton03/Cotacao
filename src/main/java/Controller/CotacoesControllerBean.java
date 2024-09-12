@@ -1,11 +1,9 @@
 package Controller;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -39,14 +37,20 @@ public class CotacoesControllerBean implements Serializable {
     private IndicadoresService indicadorService;
     
     private Cotacoes selectedCotacao;
+    
+    private Indicadores selectedIndicador;
 
     private String termoPesquisa;
     
+    private String selectedAPI;
     private String selectedFilter;
     private LocalDateTime dataInicial;
     private LocalDateTime dataFinal;
     private Long indicadorId;
     private String indicadorDescription;
+    
+    private String startDate;
+    private String finalDate;
     
     private BarChartModel barChartModel;
     
@@ -56,6 +60,7 @@ public class CotacoesControllerBean implements Serializable {
     private List<FiltroDTO> cotacoesFiltradas;
     
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER_DATA = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public void initNewCotacao() {
         selectedCotacao = new Cotacoes();
@@ -69,18 +74,16 @@ public class CotacoesControllerBean implements Serializable {
     	indicadorId = null;
     }
     
+    public void initNewBuscaAPI() {
+    	selectedAPI = null;
+    	listaIndicadores = indicadorService.todosIndicadores();
+    	dataInicial = null;
+    	dataFinal = null;
+    	selectedIndicador = new Indicadores();
+    }
+    
     public static String formatLocalDateTime(LocalDateTime dateTime) {
     	return dateTime.format(FORMATTER);
-    }
-    
-    public void atualizarDescricaoSelecionada() {
-        if (indicadorId != null) {
-        	indicadorDescription = cotacoesService.obterDescricaoIndicador(indicadorId);
-        }
-    }
-    
-    public void atualizarCotacoes() {
-        cotacoesService.atualizarCotacoesDoBanco(indicadorDescription);
     }
     
     public void todosIndicadores() {
@@ -159,6 +162,37 @@ public class CotacoesControllerBean implements Serializable {
             listaCotacoes = cotacoesService.todasCotacoes();
         }
         return listaCotacoes;
+    }
+    
+    public void convertDates() {
+    	if (dataInicial != null) {
+    		startDate = dataInicial.format(FORMATTER_DATA);
+    		System.out.println("Data Inicial formatada: " + startDate);
+    	}
+    	if (dataFinal != null) {
+    		finalDate = dataFinal.format(FORMATTER_DATA);
+    		System.out.println("Data Final formatada: " + finalDate);
+    	}
+    }
+    
+    public void buscarAPI(String indicadorDescription, String selectedAPI) {
+    	convertDates();
+    	switch (selectedAPI) {
+    	case "1":
+    		chamarAcoes(indicadorDescription);
+    		break;
+    	case "2":
+    		chamarMoedas(indicadorDescription, startDate, finalDate);
+    		break;
+    	}
+    }
+    
+    public void chamarAcoes(String indicadorDescription) {
+    	cotacoesService.atualizarAcoes(indicadorDescription);
+    }
+    
+    public void chamarMoedas(String indicadorDescription, String startDate, String finalDate) {
+    	cotacoesService.atualizarMoedas(indicadorDescription, startDate, finalDate);
     }
     
     public void aplicarFiltro() {
@@ -319,7 +353,6 @@ public class CotacoesControllerBean implements Serializable {
 
 	public void setIndicadorId(Long indicadorId) {
 		this.indicadorId = indicadorId;
-		atualizarDescricaoSelecionada();
 	}
 
 	public String getIndicadorDescription() {
@@ -328,6 +361,38 @@ public class CotacoesControllerBean implements Serializable {
 
 	public void setIndicadorDescription(String indicadorDescription) {
 		this.indicadorDescription = indicadorDescription;
+	}
+
+	public String getSelectedAPI() {
+		return selectedAPI;
+	}
+
+	public void setSelectedAPI(String selectedAPI) {
+		this.selectedAPI = selectedAPI;
+	}
+
+	public Indicadores getSelectedIndicador() {
+		return selectedIndicador;
+	}
+
+	public void setSelectedIndicador(Indicadores selectedIndicador) {
+		this.selectedIndicador = selectedIndicador;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getFinalDate() {
+		return finalDate;
+	}
+
+	public void setFinalDate(String finalDate) {
+		this.finalDate = finalDate;
 	}
 	
 	

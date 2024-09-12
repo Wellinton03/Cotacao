@@ -28,7 +28,7 @@
                     <p:graphicImage name="images/primefaces-logo.svg" library="showcase"
                                     width="150" />
                 </f:facet>
-                <p:menuitem value="Quit" icon="pi pi-home"
+                <p:menuitem value="Tela inicial" icon="pi pi-home"
                             outcome="/CadastroDeIndicadores" />
                 <p:divider layout="vertical" />
                 <p:submenu label="Tabelas" icon="pi pi-database">
@@ -75,6 +75,17 @@
                         update="cotacoesDialog"
                         process="@this">
                         <p:resetInput target="cotacoesDialog"/>
+                    </p:commandButton>
+                    
+                    <p:commandButton
+                    	title="Abastecer"
+                    	value="API"
+                    	icon="pi pi-arrow-circle-down"
+                    	styleClass="buttonAdd"
+                    	actionListener="#{cotacoesControllerBean.initNewBuscaAPI()}"
+                    	oncomplete="PF('APIWidgetVar').show()"
+                    	update="APIDialog"
+                    	process="@this">
                     </p:commandButton>
 
                     <p:commandButton
@@ -157,6 +168,79 @@
     </p:column>
            </p:dataTable>
 
+				<!-- DIALOG API -->
+			<p:dialog
+				header="Buscar da API"
+				id="APIDialog"
+				widgetVar="APIWidgetVar"
+				modal="true"
+				resizable="false"
+                closeOnEscape="true">
+						
+					<p:defaultCommand target="BuscarAPI" scope="APIDialog"/>
+					
+					<h:panelGrid
+                    columns="2"
+                    columnClasses="label-col, input-col"
+                    id="APIPanelGrid"
+                    rendered="#{cotacoesControllerBean.selectedIndicador ne null}"
+                    styleClass="modal-grid">
+
+                    <p:outputLabel value="Indicador: " for="indicadorAPI"/>
+                    <p:selectOneMenu
+                        id="indicadorAPI"
+                        value="#{cotacoesControllerBean.selectedIndicador}"
+                        styleClass="menu-modal"
+                        converter="indicadoresConverter"
+                        required="true">
+                        <f:selectItem itemLabel="Selecione..."
+                                      noSelectionOption="true"
+                                      itemValue=""/>
+                        <f:selectItems value="#{cotacoesControllerBean.listaIndicadores}" var="indicador"
+                                       itemLabel="#{indicador.description}" itemValue="#{indicador}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="API: " for="API" />
+                    <p:selectOneMenu
+                    	id="API"
+                    	styleClass="menu-modal"
+                    	required="true"
+                    	value="#{cotacoesControllerBean.selectedAPI}">
+                    	<f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="Ações - Alpha Vantage" itemValue="1" />
+                        <f:selectItem itemLabel="Moedas - Awesome" itemValue="2" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="DataInicial: " for="dataInicial" />
+                     <p:datePicker 
+                    	id="dataInicial" 
+                    	showButtonBar="true" 
+                    	timeControlType="spinner" 
+                    	showTime="false" 
+                    	value="#{cotacoesControllerBean.dataInicial}" 
+                    	required="true" />
+
+                   <h:outputLabel value="Data Final: " for="dataFinal" />
+                    <p:datePicker 
+                    	id="dataFinal" 
+                    	showButtonBar="true" 
+                    	timeControlType="spinner" 
+                    	showTime="false" 
+                    	value="#{cotacoesControllerBean.dataFinal}" 
+                    	required="true" />
+
+                    <p:commandButton
+                        id="BuscarAPI"
+                        value="Salvar"
+                        actionListener="#{cotacoesControllerBean.buscarAPI(cotacoesControllerBean.selectedIndicador.description, cotacoesControllerBean.selectedAPI)}"
+                        styleClass="button-modal"
+                        update="cotacoesDataTable APIPanelGrid messages toolbar"
+                        oncomplete="PF('APIWidgetVar').hide()"
+                        process="APIDialog"/>
+                </h:panelGrid>		
+			</p:dialog>
+
+				<!-- DIALOG PARA ADICIONAR COTAÇÃO -->
             <p:dialog
                 header="Nova Cotação"
                 id="cotacoesDialog"
@@ -165,7 +249,7 @@
                 resizable="false"
                 closeOnEscape="true">
 
-                <p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
+                	<p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
 
                 <h:panelGrid
                     columns="2"
