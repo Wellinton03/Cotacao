@@ -138,10 +138,10 @@ public class CotacoesService implements Serializable {
         }
     }
     
-    public void atualizarMoedas(String moeda, String startDate, String finalDate ) {
+    public void atualizarMoedas(String moeda, Integer dias ) {
     	EntityTransaction transaction = null;
     	try {
-    		List<APICurrencyResponse> apiResponses = apiAwesome.getCurrencyHistoryData(moeda, startDate, finalDate);
+    		List<APICurrencyResponse> apiResponses = apiAwesome.getCurrencyHistoryData(moeda, dias);
     		
     		transaction = manager.getTransaction();
     			if(!transaction.isActive()) {

@@ -74,7 +74,7 @@
                         oncomplete="PF('cotacaoDialogWidgetVar').show()"
                         update="cotacoesDialog"
                         process="@this">
-                        <p:resetInput target="cotacoesDialog"/>
+                        <p:resetInput target="cotacoesDialog "/>
                     </p:commandButton>
                     
                     <p:commandButton
@@ -100,15 +100,14 @@
                         <p:resetInput target="cotacoesDialog"/>
                     </p:commandButton>
 
-                    <p:commandButton
-                        title="Excluir"
+                     <p:commandButton 
+                        title="Excluir" 
                         value="Excluir"
-                        icon="pi pi-trash"
-                        styleClass="buttonDelete"
-                        actionListener="#{cotacoesControllerBean.excluir()}"
+                        icon="pi pi-trash" 
+                        styleClass="buttonDelete" 
+                        oncomplete="PF('confirmDialogWidgetVar').show()" 
                         disabled="#{not cotacoesControllerBean.cotacaoSeleciona}"
-                        update="cotacoesDialog toolbar cotacoesDataTable messages"
-                        process="@this"/>
+                        process="@this" />
                         
                         
                 </p:toolbarGroup>
@@ -116,9 +115,16 @@
                 <p:toolbarGroup align="right">
                     <h:panelGroup styleClass="search-bar">
                        
-                        <p:inputText
-                            placeholder="Faça sua busca..."
-                            value="#{cotacoesControllerBean.termoPesquisa}"/>
+                         <p:inputText 
+   							placeholder="Faça sua busca..."
+    						value="#{cotacoesControllerBean.termoPesquisa}"
+    						style="text-transform: uppercase;">
+    					<style>
+       						 input::placeholder {
+            				text-transform: none;
+        								}
+    					</style>
+					</p:inputText>
                         
                          <p:commandButton
                          	id="searchCommandButton"
@@ -167,6 +173,52 @@
         </h:outputText>
     </p:column>
            </p:dataTable>
+           
+           			<!-- DIALOG CONFIRMATION -->
+            <p:dialog 
+    			id="confirmDialog"
+    			header="Confirmação de exclusão"
+    			widgetVar="confirmDialogWidgetVar"
+    			modal="true"
+    			resizable="false"
+    			closeOnEscape="true"
+    			showEffect="fade"
+    			styleClass="center-dialog-header">
+    			
+    			 <p:defaultCommand target="yesButton" scope="confirmDialog"/>
+    			
+    			<h:panelGrid 
+                    id="confirmPanelGrid"
+                    columns="2"
+                    columnClasses="label-col, input-col"
+                    styleClass="modal-grid">
+                    
+    		<h:outputText 
+    			styleClass="confirmDialogText" 
+    			value="Você realmente deseja EXCLUIR essa cotação? " 
+    			escape="false" />
+    	
+    			<br/>
+    		<p:commandButton
+    				id="yesButton"
+        			value="Sim" 
+        			oncomplete="PF('confirmDialogWidgetVar').hide(); "
+        			actionListener="#{cotacoesControllerBean.excluir}"
+        			process="@this"
+        			update="toolbar cotacoesDataTable messages"
+        			styleClass="button-confirm" >
+        	</p:commandButton>
+        	
+        	<p:commandButton
+    				id="noButton"
+        			value="Não" 
+        			oncomplete="PF('confirmDialogWidgetVar').hide(); "
+        			process="@this"
+        			update="toolbar"
+        			styleClass="button-cancel" >
+        	</p:commandButton>
+        		</h:panelGrid>
+			</p:dialog>
 
 				<!-- DIALOG API -->
 			<p:dialog
@@ -175,7 +227,8 @@
 				widgetVar="APIWidgetVar"
 				modal="true"
 				resizable="false"
-                closeOnEscape="true">
+                closeOnEscape="true"
+                styleClass="center-dialog-header">
 						
 					<p:defaultCommand target="BuscarAPI" scope="APIDialog"/>
 					
@@ -202,52 +255,55 @@
                     
                     <p:outputLabel value="API: " for="API" />
                     <p:selectOneMenu
-                    	id="API"
-                    	styleClass="menu-modal"
-                    	required="true"
-                    	value="#{cotacoesControllerBean.selectedAPI}">
-                    	<f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
-                        <f:selectItem itemLabel="Ações - Alpha Vantage" itemValue="1" />
-                        <f:selectItem itemLabel="Moedas - Awesome" itemValue="2" />
-                    </p:selectOneMenu>
-                    
-                    <p:outputLabel value="DataInicial: " for="dataInicial" />
-                     <p:datePicker 
-                    	id="dataInicial" 
-                    	showButtonBar="true" 
-                    	timeControlType="spinner" 
-                    	showTime="false" 
-                    	value="#{cotacoesControllerBean.dataInicial}" 
-                    	required="true" />
+            			id="API"
+            			styleClass="menu-modal"
+            			required="true"
+            			value="#{cotacoesControllerBean.selectedAPI}">
+            		<f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
+           			<f:selectItem itemLabel="Ações - Alpha Vantage" itemValue="1" />
+           	 		<f:selectItem itemLabel="Moedas - Awesome" itemValue="2" />
+           	 		<p:ajax update="dataInicial dataFinal" process="@this" />
+        			</p:selectOneMenu>
 
-                   <h:outputLabel value="Data Final: " for="dataFinal" />
-                    <p:datePicker 
-                    	id="dataFinal" 
-                    	showButtonBar="true" 
-                    	timeControlType="spinner" 
-                    	showTime="false" 
-                    	value="#{cotacoesControllerBean.dataFinal}" 
-                    	required="true" />
+        		<p:outputLabel value="Data Inicial: " for="dataInicial" />
+       			<p:datePicker
+            			id="dataInicial"
+            			showButtonBar="true"
+            			timeControlType="spinner"
+            			showTime="false"
+            			value="#{cotacoesControllerBean.dataInicial}"
+            			disabled="#{cotacoesControllerBean.selectedAPI ne '2'}"
+            			/>
+
+        		<h:outputLabel value="Data Final: " for="dataFinal" />
+        		<p:datePicker
+            		id="dataFinal"
+            		showButtonBar="true"
+            		timeControlType="spinner"
+            		showTime="false"
+            		value="#{cotacoesControllerBean.dataFinal}"
+            		disabled="#{cotacoesControllerBean.selectedAPI ne '2'}"/>
 
                     <p:commandButton
                         id="BuscarAPI"
-                        value="Salvar"
-                        actionListener="#{cotacoesControllerBean.buscarAPI(cotacoesControllerBean.selectedIndicador.description, cotacoesControllerBean.selectedAPI)}"
+                        value="Buscar"
+                        actionListener="#{cotacoesControllerBean.buscarAPI(cotacoesControllerBean.selectedIndicador.description, cotacoesControllerBean.selectedAPI, cotacoesControllerBean.dataInicial, cotacoesControllerBean.dataFinal)}"
                         styleClass="button-modal"
                         update="cotacoesDataTable APIPanelGrid messages toolbar"
                         oncomplete="PF('APIWidgetVar').hide()"
-                        process="APIDialog"/>
+                        process="@this"/>
                 </h:panelGrid>		
 			</p:dialog>
 
 				<!-- DIALOG PARA ADICIONAR COTAÇÃO -->
             <p:dialog
-                header="Nova Cotação"
+                header="Cotação"
                 id="cotacoesDialog"
                 widgetVar="cotacaoDialogWidgetVar"
                 modal="true"
                 resizable="false"
-                closeOnEscape="true">
+                closeOnEscape="true"
+                styleClass="center-dialog-header">
 
                 	<p:defaultCommand target="saveCommandButton" scope="cotacoesDialog"/>
 

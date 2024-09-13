@@ -19,10 +19,8 @@ public class APIAwesome {
 
 		private ObjectMapper mapper = new ObjectMapper();
 		
-	public List<APICurrencyResponse> getCurrencyHistoryData(String moeda, String startDate, String finalDate) {
-		String urlString = String.format("https://economia.awesomeapi.com.br/json/daily/%s?start_date=%s&end_date=%s", moeda, startDate, finalDate);
-		System.out.println(urlString);
-		
+	public List<APICurrencyResponse> getCurrencyHistoryData(String moeda, Integer dias) {
+		String urlString = String.format("https://economia.awesomeapi.com.br/json/daily/%s/%d", moeda, dias);
 		
 		List<APICurrencyResponse> responses = new ArrayList<>();
 		
@@ -59,7 +57,7 @@ public class APIAwesome {
 						long timestamp = Long.parseLong(timestampStr);
 						double bid = Double.parseDouble(bidStr);
 						
-						LocalDateTime dateTime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+						LocalDateTime dateTime = Instant.ofEpochSecond(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
 						
 						APICurrencyResponse currencyResponse = new APICurrencyResponse();
 							currencyResponse.setBid(bid);

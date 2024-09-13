@@ -23,8 +23,9 @@ public class APIAlphaVantage {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
     public List<APIResponse> getStockHistoryData(String symbol) {
+    	System.out.println(symbol);
         String urlString = String.format("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", symbol, API_KEY);
-
+        System.out.println(urlString);
         List<APIResponse> responses = new ArrayList<>();
 
         try {

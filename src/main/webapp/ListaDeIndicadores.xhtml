@@ -64,17 +64,15 @@
             <p:toolbar id="toolbar">
                 <p:toolbarGroup>
                     <p:commandButton 
-                        title="Cadastro" 
-                        value="Adicionar"
-                        icon="pi pi-plus" 
-                        styleClass="buttonAdd"
-                        actionListener="#{indicadoresControllerBean.initNewIndicador()}"
-                        oncomplete="PF('indicadorDialogWidgetVar').show()"
-                        update="indicadoresDialog"
-                        process="@this">
-                        <p:resetInput target="indicadoresDialog"/>
-                    </p:commandButton>
-
+    					title="Cadastro" 
+   	 					value="Adicionar"
+    					icon="pi pi-plus" 
+    					styleClass="buttonAdd"
+    					oncomplete="PF('infoDialogWidgetVar').show();"
+    					update="infoDialog toolbar" 
+    					process="@this">
+				</p:commandButton>
+                    
                     <p:commandButton 
                         title="Edição" 
                         value="Editar"
@@ -92,11 +90,9 @@
                         value="Excluir"
                         icon="pi pi-trash" 
                         styleClass="buttonDelete" 
-                        actionListener="#{indicadoresControllerBean.excluir()}"
+                        oncomplete="PF('confirmDialogWidgetVar').show()" 
                         disabled="#{not indicadoresControllerBean.indicadorSeleciona}"
-                        update="indicadoresDialog toolbar IndicadoresDataTable messages"
-                        process="@this"
-                         />
+                        process="@this" />
 
                 </p:toolbarGroup>
 
@@ -104,15 +100,22 @@
                     align="right">
                     <h:panelGroup styleClass="search-bar">
 
-                        <p:inputText 
-                            placeholder="Faça sua busca..."
-                            value="#{indicadoresControllerBean.termoPesquisa}" />
+                     <p:inputText 
+   							placeholder="Faça sua busca..."
+    						value="#{indicadoresControllerBean.termoPesquisa}"
+    						style="text-transform: uppercase;">
+    					<style>
+       						 input::placeholder {
+            				text-transform: none;
+        								}
+    					</style>
+					</p:inputText>
 
                         <p:commandButton 
                             id="searchCommandButton" 
                             icon="pi pi-fw pi-search"
                             actionListener="#{indicadoresControllerBean.pesquisa()}" 
-                            update="IndicadoresDataTable" />
+                            update="indicadoresDataTable" />
 
                     </h:panelGroup>
                 </p:toolbarGroup>
@@ -120,7 +123,7 @@
 
             <p:dataTable 
                 value="#{indicadoresControllerBean.listaIndicadores}"
-                id="IndicadoresDataTable" 
+                id="indicadoresDataTable" 
                 var="indicadores" 
                 paginator="true" 
                 rows="5"
@@ -134,7 +137,7 @@
 
                 <p:ajax event="rowUnselect" update="form:toolbar" />		
 
-                <p:column headerText="id">
+                <p:column headerText="ID">
                     <h:outputText value="${indicadores.id}" />
                 </p:column>
 
@@ -144,13 +147,98 @@
 
             </p:dataTable>
             
+            		<!-- DIALOG CONFIRMATION -->
             <p:dialog 
-                header="Novo Indicador"
+    			id="confirmDialog"
+    			header="Confirmação de exclusão"
+    			widgetVar="confirmDialogWidgetVar"
+    			modal="true"
+    			resizable="false"
+    			closeOnEscape="true"
+    			showEffect="fade"
+    			styleClass="center-dialog-header">
+    			
+    			 <p:defaultCommand target="yesButton" scope="confirmDialog"/>
+    			
+    			<h:panelGrid 
+                    id="confirmPanelGrid"
+                    columns="2"
+                    columnClasses="label-col, input-col"
+                    styleClass="modal-grid">
+                    
+    		<h:outputText 
+    			styleClass="confirmDialogText" 
+    			value="Este INDICADOR pode ter COTAÇÕES vinculadas, você realmente deseja EXCLUIR? " 
+    			escape="false" />
+    	
+    			<br/>
+    		<p:commandButton
+    				id="yesButton"
+        			value="Sim" 
+        			oncomplete="PF('confirmDialogWidgetVar').hide(); "
+        			actionListener="#{indicadoresControllerBean.excluir}"
+        			process="@this"
+        			update="indicadoresDialog toolbar indicadoresDataTable messages"
+        			styleClass="button-confirm" >
+        	</p:commandButton>
+        	
+        	<p:commandButton
+    				id="noButton"
+        			value="Não" 
+        			oncomplete="PF('confirmDialogWidgetVar').hide(); "
+        			process="@this"
+        			update="indicadoresDialog toolbar"
+        			styleClass="button-cancel" >
+        	</p:commandButton>
+        		</h:panelGrid>
+			</p:dialog>
+            
+            	<!-- DIALOG INFO -->
+            <p:dialog 
+    			id="infoDialog"
+    			header="Atenção!"
+    			widgetVar="infoDialogWidgetVar"
+    			modal="true"
+    			resizable="false"
+    			closeOnEscape="true"
+    			showEffect="fade"
+    			styleClass="center-dialog-header">
+    			
+    			 <p:defaultCommand target="okButton" scope="infoDialog"/>
+    			
+    			<h:panelGrid 
+                    styleClass="modal-grid"
+                    id="infoPanelGrid">
+                    
+    		<h:outputText styleClass="infoDialogHeader-footer" value="Formato esperado: " escape="false"   />
+    		<h:outputText styleClass="infoDialogText" value="Moeda: ('AAA-BBB'); " escape="false" />
+    		<h:outputText styleClass="infoDialogText" value="Ação: ('AAA'); " escape="false"  />
+    			<br/>
+        	<h:outputText styleClass="infoDialogHeader-footer" value="Clique em OK para continuar." escape="false"  />
+    		
+    		<p:commandButton
+    				id="okButton"
+        			value="OK" 
+        			oncomplete="PF('infoDialogWidgetVar').hide(); PF('indicadorDialogWidgetVar').show();"
+        			actionListener="#{indicadoresControllerBean.initNewIndicador()}"
+        			update="indicadoresDialog "
+        			process="@this"
+        			styleClass="button-info" >
+        		<p:resetInput target="indicadoresDialog"/>
+        	</p:commandButton>
+        		</h:panelGrid>
+			</p:dialog>
+            
+            <p:dialog 
+                header="Indicador"
                 id="indicadoresDialog"
                 widgetVar="indicadorDialogWidgetVar"
                 modal="true" 
                 resizable="false" 
-                closeOnEscape="true">
+                closeOnEscape="true"
+                showEffect="fade"
+    			hideEffect="fade"
+    			styleClass="center-dialog-header">
 
                 <p:defaultCommand target="saveCommandButton" scope="indicadoresDialog"/>
 
@@ -162,20 +250,20 @@
                     rendered="#{indicadoresControllerBean.selectedIndicador ne null}">
 
                     <p:outputLabel value="Nome: " for="description" />
-                    <p:inputText 
-                        id="description"
-                        value="#{indicadoresControllerBean.selectedIndicador.description}"
-                        size="10" 
-                        maxlength="10"
-                        required="true"
-                        style="text-transform: uppercase;" />
-                        
+					<p:inputText 
+    					id="description"
+    					value="#{indicadoresControllerBean.selectedIndicador.description}"
+    					size="10"
+    					maxlength="7" 
+    					style="text-transform: uppercase;"
+    					required="true" />
+                	        
                         <p:commandButton 
                         id="saveCommandButton" 
                         value="Salvar"
 						actionListener="#{indicadoresControllerBean.salvar()}"
                         styleClass="button-modal" 
-	                    update="IndicadoresDataTable indicadorPanelGrid messages toolbar"
+	                    update="indicadoresDataTable indicadorPanelGrid messages toolbar"
 						oncomplete="PF('indicadorDialogWidgetVar').hide()" 
 						process="indicadoresDialog"  />
 

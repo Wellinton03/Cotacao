@@ -22,7 +22,7 @@ public class IndicadoresControllerBean implements Serializable {
 	private Indicadores selectedIndicador;
 	
 	private String termoPesquisa;
-
+	
 	@Inject
 	private IndicadoresService indicadorService;
 	
@@ -35,6 +35,7 @@ public class IndicadoresControllerBean implements Serializable {
  	
  	public void initNewIndicador() {
  	    selectedIndicador = new Indicadores();
+ 	    
  	}
  	
  	public void pesquisa() {
@@ -43,6 +44,10 @@ public class IndicadoresControllerBean implements Serializable {
 
  	public void salvar() {
  	    if (selectedIndicador != null) {
+ 	    		
+ 	    	 if (selectedIndicador.getDescription() != null) {
+ 	            selectedIndicador.setDescription(selectedIndicador.getDescription().toUpperCase());
+ 	        }
  	        indicadorService.salvar(selectedIndicador);
  	        listaIndicadores = indicadorService.todosIndicadores();
  	        
@@ -91,6 +96,9 @@ public class IndicadoresControllerBean implements Serializable {
 	public boolean isIndicadorSeleciona() {
 		return selectedIndicador != null && selectedIndicador.getId() != null;
 	}
+
+	
+	
 	
 
 }

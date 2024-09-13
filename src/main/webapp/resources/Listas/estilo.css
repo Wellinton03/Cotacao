@@ -132,6 +132,75 @@ body #form .button-modal:hover {
     background-color: #0056b3;
 }
 
+body #form .button-info {
+    background-color: #FFA500;
+    border: none;
+    color: white;
+    margin: 10px auto;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block; 
+    margin: 10px auto;
+}
+
+body #form .button-info:hover {
+    background-color: #DAA520;
+}
+
+body #form .button-confirm {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body #form .button-cancel {
+    background-color: #FF0000;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body #form .infoDialogHeader-footer {
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	font-size: 1.1em; 
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+body #form .infoDialogText {
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	font-size: 0.9em; 
+    font-weight: bold;
+    color: red;
+    margin-bottom: 0.5em;
+}
+
+body #form .confirmDialogText {
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	font-size: 0.9em; 
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+body #form .center-dialog-header {
+	text-align: center;
+    width: 100%;
+}
 
 
    

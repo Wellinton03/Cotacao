@@ -80,7 +80,8 @@
                 widgetVar="filtroWidgetVar"
                 closeOnEscape="true"
                 resizable="false"
-                modal="true">
+                modal="true"
+                styleClass="center-dialog-header">
                 
                 <p:defaultCommand target="filterButton" scope="filtroDialog"/>
                 
@@ -122,7 +123,8 @@
                     	id="dataInicial" 
                     	showButtonBar="true" 
                     	timeControlType="spinner" 
-                    	showTime="true" value="#{cotacoesControllerBean.dataInicial}" 
+                    	showTime="true" 
+                    	value="#{cotacoesControllerBean.dataInicial}" 
                     	disabled="#{cotacoesControllerBean.selectedFilter ne 'custom'}"
                     	required="true" />
                     

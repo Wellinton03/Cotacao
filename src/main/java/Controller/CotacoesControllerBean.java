@@ -3,6 +3,7 @@ package Controller;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -60,7 +61,6 @@ public class CotacoesControllerBean implements Serializable {
     private List<FiltroDTO> cotacoesFiltradas;
     
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    private static final DateTimeFormatter FORMATTER_DATA = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public void initNewCotacao() {
         selectedCotacao = new Cotacoes();
@@ -164,25 +164,27 @@ public class CotacoesControllerBean implements Serializable {
         return listaCotacoes;
     }
     
-    public void convertDates() {
-    	if (dataInicial != null) {
-    		startDate = dataInicial.format(FORMATTER_DATA);
-    		System.out.println("Data Inicial formatada: " + startDate);
+    public Integer diferenca(LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    	if(dataInicial != null && dataInicial != null) {
+    		
+    		long dias = ChronoUnit.DAYS.between(dataInicial, dataFinal);
+    		return (int) dias;
     	}
-    	if (dataFinal != null) {
-    		finalDate = dataFinal.format(FORMATTER_DATA);
-    		System.out.println("Data Final formatada: " + finalDate);
-    	}
+    	
+    	return null;
     }
     
-    public void buscarAPI(String indicadorDescription, String selectedAPI) {
-    	convertDates();
+    
+    
+    public void buscarAPI(String indicadorDescription, String selectedAPI, LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    	System.out.println(indicadorDescription);
+    	Integer dias = diferenca(dataInicial, dataFinal);
     	switch (selectedAPI) {
     	case "1":
     		chamarAcoes(indicadorDescription);
     		break;
     	case "2":
-    		chamarMoedas(indicadorDescription, startDate, finalDate);
+    		chamarMoedas(indicadorDescription, dias);
     		break;
     	}
     }
@@ -191,8 +193,8 @@ public class CotacoesControllerBean implements Serializable {
     	cotacoesService.atualizarAcoes(indicadorDescription);
     }
     
-    public void chamarMoedas(String indicadorDescription, String startDate, String finalDate) {
-    	cotacoesService.atualizarMoedas(indicadorDescription, startDate, finalDate);
+    public void chamarMoedas(String indicadorDescription, Integer dias) {
+    	cotacoesService.atualizarMoedas(indicadorDescription, dias);
     }
     
     public void aplicarFiltro() {
