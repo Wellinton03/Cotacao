@@ -120,12 +120,16 @@ body #form .button-modal {
     background-color: #007bff;
     border: none;
     color: white;
-    margin: 10px auto;
+    margin: 20px 0px 0px 0px ; 
     padding: 8px 16px;
     font-size: 14px;
     border-radius: 4px;
     cursor: pointer;
-    display: center;
+    display: flex; 
+}
+
+body #form .button-container {
+    text-align: center; 
 }
 
 body #form .button-modal:hover {
@@ -167,6 +171,27 @@ body #form .button-cancel {
     font-size: 14px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+body #form .button-API {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    margin: 20px 0px 0px 0px ; 
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex; 
+}
+
+body #form .button-API-icon .ui-icon {
+    color: #ffffff; 
+    font-size: 15px;
+}
+
+body #form .button-API:hover {
+    background-color: #0056b3;
 }
 
 body #form .infoDialogHeader-footer {

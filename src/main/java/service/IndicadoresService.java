@@ -34,9 +34,8 @@ public class IndicadoresService implements Serializable {
 	}
 
 	public List<Indicadores> buscar(String description) {
-		TypedQuery<Indicadores> query = manager.createQuery("from Indicadores where description like :description ",
-				Indicadores.class);
-		query.setParameter("description", description + "%");
+		TypedQuery<Indicadores> query = manager.createQuery("from Indicadores where description like :description ", Indicadores.class);
+		query.setParameter("description", "%" + description + "%");
 
 		return query.getResultList();
 	}

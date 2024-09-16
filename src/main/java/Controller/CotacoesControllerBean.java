@@ -55,6 +55,9 @@ public class CotacoesControllerBean implements Serializable {
     
     private BarChartModel barChartModel;
     
+    private String iconSearch = "pi pi-search";
+    private String iconSave = "pi pi-save";
+    
     private List<Cotacoes> listaCotacoes;
     private List<Indicadores> listaIndicadores;
     private List<IndicadorDTO> indicadoresFiltrados;
@@ -177,7 +180,7 @@ public class CotacoesControllerBean implements Serializable {
     
     
     public void buscarAPI(String indicadorDescription, String selectedAPI, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-    	System.out.println(indicadorDescription);
+        
     	Integer dias = diferenca(dataInicial, dataFinal);
     	switch (selectedAPI) {
     	case "1":
@@ -396,8 +399,39 @@ public class CotacoesControllerBean implements Serializable {
 	public void setFinalDate(String finalDate) {
 		this.finalDate = finalDate;
 	}
+
 	
+	public void changeIconLoad() {
+        this.iconSearch = "pi pi-spin pi-spinner";
+    }
 	
+	public void changeIconLoadSave() {
+        this.iconSave = "pi pi-spin pi-spinner";
+    }
+	
+	public void initIconSearch() {
+		this.iconSearch = "pi pi-search";
+	}
+	
+	public void initIconSave() {
+		this.iconSave = "pi pi-save";
+	}
+
+	public String getIconSearch() {
+		return iconSearch;
+	}
+
+	public void setIconSearch(String iconSearch) {
+		this.iconSearch = iconSearch;
+	}
+
+	public String getIconSave() {
+		return iconSave;
+	}
+
+	public void setIconSave(String iconSave) {
+		this.iconSave = iconSave;
+	}
 
 }
     

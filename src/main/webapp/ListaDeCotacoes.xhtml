@@ -74,6 +74,7 @@
                         oncomplete="PF('cotacaoDialogWidgetVar').show()"
                         update="cotacoesDialog"
                         process="@this">
+                        <p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.initIconSave()}" />
                         <p:resetInput target="cotacoesDialog "/>
                     </p:commandButton>
                     
@@ -86,6 +87,7 @@
                     	oncomplete="PF('APIWidgetVar').show()"
                     	update="APIDialog"
                     	process="@this">
+                    	<p:ajax event="click" update="BuscarAPI" listener="#{cotacoesControllerBean.initIconSearch()}" />
                     </p:commandButton>
 
                     <p:commandButton
@@ -97,6 +99,7 @@
                         oncomplete="PF('cotacaoDialogWidgetVar').show()"
                         update="cotacoesDialog "
                         process="@this">
+                        <p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.initIconSave()}" />
                         <p:resetInput target="cotacoesDialog"/>
                     </p:commandButton>
 
@@ -119,10 +122,8 @@
    							placeholder="Faça sua busca..."
     						value="#{cotacoesControllerBean.termoPesquisa}"
     						style="text-transform: uppercase;">
-    					<style>
-       						 input::placeholder {
-            				text-transform: none;
-        								}
+    					<style> 
+    						input::placeholder {text-transform: none;}
     					</style>
 					</p:inputText>
                         
@@ -177,7 +178,7 @@
            			<!-- DIALOG CONFIRMATION -->
             <p:dialog 
     			id="confirmDialog"
-    			header="Confirmação de exclusão"
+    			header="CONFIRMAÇÃO DE EXCLUSÃO"
     			widgetVar="confirmDialogWidgetVar"
     			modal="true"
     			resizable="false"
@@ -201,7 +202,8 @@
     			<br/>
     		<p:commandButton
     				id="yesButton"
-        			value="Sim" 
+        			value="Sim"
+        			icon="pi pi-check"
         			oncomplete="PF('confirmDialogWidgetVar').hide(); "
         			actionListener="#{cotacoesControllerBean.excluir}"
         			process="@this"
@@ -211,10 +213,11 @@
         	
         	<p:commandButton
     				id="noButton"
-        			value="Não" 
+        			value="Não"
+        			icon="pi pi-times"
         			oncomplete="PF('confirmDialogWidgetVar').hide(); "
         			process="@this"
-        			update="toolbar"
+        			update="toolbar cotacoesDataTable"
         			styleClass="button-cancel" >
         	</p:commandButton>
         		</h:panelGrid>
@@ -245,6 +248,7 @@
                         value="#{cotacoesControllerBean.selectedIndicador}"
                         styleClass="menu-modal"
                         converter="indicadoresConverter"
+                        style="width: 200px;"
                         required="true">
                         <f:selectItem itemLabel="Selecione..."
                                       noSelectionOption="true"
@@ -258,6 +262,7 @@
             			id="API"
             			styleClass="menu-modal"
             			required="true"
+            			style="width: 200px;"
             			value="#{cotacoesControllerBean.selectedAPI}">
             		<f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true" />
            			<f:selectItem itemLabel="Ações - Alpha Vantage" itemValue="1" />
@@ -273,7 +278,7 @@
             			showTime="false"
             			value="#{cotacoesControllerBean.dataInicial}"
             			disabled="#{cotacoesControllerBean.selectedAPI ne '2'}"
-            			/>
+            			required="true" />
 
         		<h:outputLabel value="Data Final: " for="dataFinal" />
         		<p:datePicker
@@ -282,16 +287,22 @@
             		timeControlType="spinner"
             		showTime="false"
             		value="#{cotacoesControllerBean.dataFinal}"
-            		disabled="#{cotacoesControllerBean.selectedAPI ne '2'}"/>
+            		disabled="#{cotacoesControllerBean.selectedAPI ne '2'}"
+            		required="true"/>
 
-                    <p:commandButton
+				<div class="button-container"> 
+                    <p:commandButton 
                         id="BuscarAPI"
+                        icon="#{cotacoesControllerBean.iconSearch}"
                         value="Buscar"
                         actionListener="#{cotacoesControllerBean.buscarAPI(cotacoesControllerBean.selectedIndicador.description, cotacoesControllerBean.selectedAPI, cotacoesControllerBean.dataInicial, cotacoesControllerBean.dataFinal)}"
-                        styleClass="button-modal"
+                        styleClass="button-API "
                         update="cotacoesDataTable APIPanelGrid messages toolbar"
                         oncomplete="PF('APIWidgetVar').hide()"
-                        process="@this"/>
+                        process="APIDialog ">
+                        <p:ajax event="click" update="BuscarAPI" listener="#{cotacoesControllerBean.changeIconLoad()}" />
+                        </p:commandButton>
+				</div>
                 </h:panelGrid>		
 			</p:dialog>
 
@@ -317,10 +328,12 @@
                     <p:outputLabel value="Indicador: " for="indicador"/>
                     <p:selectOneMenu
                         id="indicador"
+                        size="20"
                         value="#{cotacoesControllerBean.selectedCotacao.indicadores}"
                         styleClass="menu-modal"
                         converter="indicadoresConverter"
-                        required="true">
+                        required="true"
+                        style="width: 200px;">
                         <f:selectItem itemLabel="Selecione..."
                                       noSelectionOption="true"
                                       itemValue=""
@@ -350,14 +363,19 @@
                         thousandSeparator="."
                         required="true"/>
 
+				<div class="button-container"> 
                     <p:commandButton
                         id="saveCommandButton"
                         value="Salvar"
+                        icon="#{cotacoesControllerBean.iconSave}"
                         actionListener="#{cotacoesControllerBean.salvar()}"
                         styleClass="button-modal"
                         update="cotacoesDataTable cotacoesPanelGrid messages toolbar"
                         oncomplete="PF('cotacaoDialogWidgetVar').hide()"
-                        process="cotacoesDialog "/>
+                        process="cotacoesDialog ">
+                        <p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.changeIconLoadSave()}" />
+                        </p:commandButton>
+                  </div>
                 </h:panelGrid>
             </p:dialog>
 

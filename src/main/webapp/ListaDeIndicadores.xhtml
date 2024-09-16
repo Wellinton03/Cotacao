@@ -71,6 +71,7 @@
     					oncomplete="PF('infoDialogWidgetVar').show();"
     					update="infoDialog toolbar" 
     					process="@this">
+    					<p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.initIconSave()}" />
 				</p:commandButton>
                     
                     <p:commandButton 
@@ -82,6 +83,7 @@
                         oncomplete="PF('indicadorDialogWidgetVar').show()" 
                         update="indicadoresDialog"
                         process="@this">
+                        <p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.initIconSave()}" />
                         <p:resetInput target="indicadoresDialog"/>
                     </p:commandButton>
 
@@ -150,8 +152,9 @@
             		<!-- DIALOG CONFIRMATION -->
             <p:dialog 
     			id="confirmDialog"
-    			header="Confirmação de exclusão"
+    			header="CONFIRMAÇÃO DE EXCLUSÃO"
     			widgetVar="confirmDialogWidgetVar"
+    			
     			modal="true"
     			resizable="false"
     			closeOnEscape="true"
@@ -174,7 +177,8 @@
     			<br/>
     		<p:commandButton
     				id="yesButton"
-        			value="Sim" 
+        			value="Sim"
+        			icon="pi pi-check"
         			oncomplete="PF('confirmDialogWidgetVar').hide(); "
         			actionListener="#{indicadoresControllerBean.excluir}"
         			process="@this"
@@ -185,6 +189,7 @@
         	<p:commandButton
     				id="noButton"
         			value="Não" 
+        			icon="pi pi-times"
         			oncomplete="PF('confirmDialogWidgetVar').hide(); "
         			process="@this"
         			update="indicadoresDialog toolbar"
@@ -212,7 +217,7 @@
                     
     		<h:outputText styleClass="infoDialogHeader-footer" value="Formato esperado: " escape="false"   />
     		<h:outputText styleClass="infoDialogText" value="Moeda: ('AAA-BBB'); " escape="false" />
-    		<h:outputText styleClass="infoDialogText" value="Ação: ('AAA'); " escape="false"  />
+    		<h:outputText styleClass="infoDialogText" value="Ação: Varia de acordo com cada título; " escape="false"  />
     			<br/>
         	<h:outputText styleClass="infoDialogHeader-footer" value="Clique em OK para continuar." escape="false"  />
     		
@@ -229,6 +234,7 @@
         		</h:panelGrid>
 			</p:dialog>
             
+            <!-- DIALOG INDICADOR -->
             <p:dialog 
                 header="Indicador"
                 id="indicadoresDialog"
@@ -257,16 +263,20 @@
     					maxlength="7" 
     					style="text-transform: uppercase;"
     					required="true" />
-                	        
+                	      
+                	  <div class="button-container">  
                         <p:commandButton 
-                        id="saveCommandButton" 
-                        value="Salvar"
-						actionListener="#{indicadoresControllerBean.salvar()}"
-                        styleClass="button-modal" 
-	                    update="indicadoresDataTable indicadorPanelGrid messages toolbar"
-						oncomplete="PF('indicadorDialogWidgetVar').hide()" 
-						process="indicadoresDialog"  />
-
+                        	id="saveCommandButton" 
+                        	value="Salvar"
+                        	icon="#{cotacoesControllerBean.iconSave}"
+							actionListener="#{indicadoresControllerBean.salvar()}"
+                        	styleClass="button-modal" 
+	                    	update="indicadoresDataTable indicadorPanelGrid messages toolbar"
+							oncomplete="PF('indicadorDialogWidgetVar').hide()" 
+							process="indicadoresDialog" >
+							<p:ajax event="click" update="saveCommandButton" listener="#{cotacoesControllerBean.changeIconLoadSave()}" />
+							</p:commandButton>
+					</div>
                 </h:panelGrid>
             </p:dialog>
         </h:form>
